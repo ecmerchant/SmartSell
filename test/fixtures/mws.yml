@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  User: MyText
+  AWSkey: MyText
+  Skey: MyText
+  SellerId: MyText
+
+two:
+  User: MyText
+  AWSkey: MyText
+  Skey: MyText
+  SellerId: MyText

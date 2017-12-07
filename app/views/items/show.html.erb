@@ -1,0 +1,44 @@
+<div class="container">
+  <div class="bg-success" style="align-items: center;">
+    <h1 style="padding: 10px;">Smart Sell&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small>product by <a href="http://ec-merchant.com">ec-merchant.com</a></small></h1>
+  </div>
+  <h4>ログイン中：<%= @user %>&nbsp;&nbsp;&nbsp;&nbsp;<%= link_to "MWSアカウントの設定", :controller => "items", :action => "regist" %>&nbsp;&nbsp;&nbsp;&nbsp;<%= link_to "ヤフオク設定", :controller => "items", :action => "setup" %></h4>
+  <p style="font-weight: bold;">Amazonの検索URLを入力</p>
+  <div class="row">
+    <form class="form-inline">
+    <div class="form-group" >
+      <div class="col-sm-12">
+        <label for="maxnumber" class="col-form-label">取得上限数（最大：9600件）</label>
+        <input id="maxnumber" type="number" class="form-control" value="9600" style="width: 100px;">
+      </div>
+    </div>
+    </form>
+  </div>
+  <div style="line-height:6pt">&nbsp;</div>
+  <div class="row">
+    <div class="col-sm-4">
+      <div class="input-group" style="width: 350px;">
+        <span class="input-group-btn">
+          <button id="submit_url" class="btn btn-success" type="button" style="width: 80px;">取得開始</button>
+        </span>
+        <input type="text" id="input_url" class="form-control" placeholder="Input Amazon URL Here ..">
+      </div>
+    </div>
+  </div>
+  <div style="line-height:6pt">&nbsp;</div>
+  <button id="connet_yahoo" class="btn btn-success" type="button" style="width: 120px;">ヤフオク取得</button>
+  <div style="line-height:6pt">&nbsp;</div>
+  <input id="progress" value="continue" type="hidden" />
+  <!--
+  <% @tt=Time.now.strftime("_%Y%m%d%H%M") %>
+
+  <div>
+    <a href="#" id="output" download="list<%= @tt %>.txt" class="btn btn-success" style="width: 80px;">ASIN出力</a>
+  </div>
+  -->
+  <br>
+  <div id="selected"></div>
+  <div id="result"></div>
+</div>
+
+<%= javascript_include_tag 'items_show', 'data-turbolinks-track': 'reload'  %>

@@ -1,0 +1,24 @@
+<div class="container">
+  <div class="bg-success" style="align-items: center;">
+    <h1 style="padding: 10px;">MWSアカウントの設定&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small>product by <a href="http://ec-merchant.com">ec-merchant.com</a></small></h1>
+  </div>
+  <h4>ログイン中：<%= @user %></h4>
+  <h4><%= link_to "ホーム画面", :controller => 'items', :action => 'show' %></h4>
+  <p>アマゾンのMWSアカウントを登録</p>
+  <%= form_tag('/items/regist') do %>
+    <div class="form-group">
+      <%= label :MWS, :AWSkey, 'AWSkey' %>
+      <%= text_field :MWS, :AWSkey, class:'form-control', style:'width:200pt;', value:@res1 %>
+    </div>
+    <div class="form-group">
+      <%= label :MWS, :Skey, 'Skey' %>
+      <%= text_field :MWS, :Skey, class:'form-control', style:'width:200pt;', value:@res2 %>
+    </div>
+    <div class="form-group">
+      <%= label :MWS, :SellerId, 'SellerId' %>
+      <%= text_field :MWS, :SellerId, class:'form-control', style:'width:200pt;', value:@res3 %>
+    </div>
+    <%= submit_tag('更新', class:'btn btn-success') %>
+  <% end %>
+
+</div>
