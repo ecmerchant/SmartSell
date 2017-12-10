@@ -32,7 +32,7 @@ var container = document.getElementById('result');
 var handsontable = new Handsontable(container, {
   /* オプション */
   width: 1160,
-  height: 280,
+  height: 380,
   contextMenu: true,
   data: mydata,
   wordWrap: false,
@@ -257,6 +257,89 @@ Handsontable.hooks.add('afterSelectionEnd', function() {
   selected_handsontable.render();
 }, handsontable);
 
+
+
+//出品用CSVの部分
+
+var maxRownum_csv = 9600;
+var mydata_csv = [];
+var colOption_csv = [];
+//var cheaders_csv = ["出品","ASIN","画像","商品タイトル","中古最安値","新品最安値","型番","⇒","検索URL","最高落札価格","候補URL","画像","商品名","現在価格","即決価格","検索キー"];
+var maxColnum_csv = 28;
+
+var mydata_csv = gon.csv_head
+
+/*
+for(var i = 0; i < maxRownum_csv; i++){
+  mydata_csv[i] = [];
+  for(var j = 0; j < maxColnum_csv; j++){
+    mydata_csv[i][j] = "";
+  }
+}*/
+
+for(var i = 0; i < maxColnum_csv; i++){
+  colOption_csv[i] = "";
+}
+
+
+var container_csv = document.getElementById('result_csv');
+var handsontable_csv = new Handsontable(container_csv, {
+  /* オプション */
+  width: 1160,
+  height: 380,
+  contextMenu: true,
+  data: mydata_csv,
+  wordWrap: false,
+  rowHeaders: true,
+  colHeaders: true,
+  maxCols: maxColnum_csv,
+  maxRows: maxRownum_csv,
+  manualColumnResize: true,
+  autoColumnSize: false,
+  colWidths:80,
+  rowHeights:24,
+  className: "htMiddle",
+  columns: colOption_csv
+});
+
+handsontable_csv.render();
+
+var selected_csv_container = document.getElementById('selected_csv');
+var init = [];
+init[0] = [];
+init[0][0] = "";
+
+var selected_csv_handsontable = new Handsontable(selected_csv_container, {
+  /* オプション */
+  width: 480,
+  height: 60,
+  colWidths: [480],
+  //data: mydata,
+  data: init,
+  colHeaders: ["選択中のセル"],
+  rowHeaders: false,
+  maxRows: 1,
+  manualColumnResize: true,
+  autoColumnSize: true,
+  wordWrap: false
+});
+
+Handsontable.hooks.add('afterSelectionEnd', function() {
+  var data = handsontable_csv.getValue();
+  var res = [];
+  res[0] = [];
+  res[0][0] = data;
+  selected_csv_handsontable.loadData(res);
+  selected_csv_handsontable.render();
+}, handsontable_csv);
+
+
+$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+  var activated_tab = e.target // activated tab
+  var previous_tab = e.relatedTarget // previous tab
+  handsontable_csv.render();
+  // 処理,,,,,
+})
 
 
 function sleep(time, callback){

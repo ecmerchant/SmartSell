@@ -5,6 +5,7 @@ class ItemsController < ApplicationController
   require 'peddler'
   require 'amazon/ecs'
   require 'uri'
+  require 'csv'
 
   before_action :authenticate_user!
 
@@ -14,6 +15,8 @@ class ItemsController < ApplicationController
 
   def show
       @user = current_user.email
+      csv_data = CSV.read('app/others/csv/Flat.File.Listingloader.jp.csv', headers: true)
+      gon.csv_head = csv_data
   end
 
   def regist
@@ -102,7 +105,7 @@ class ItemsController < ApplicationController
         for x in 0..13
           data[j][x] = ""
         end
-        data[j][0] = ""
+        data[j][0] = false
         data[j][1] = list.value
         data[j][6] = "⇒"
         j += 1

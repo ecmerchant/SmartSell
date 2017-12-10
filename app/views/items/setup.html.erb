@@ -2,8 +2,7 @@
   <div class="bg-success" style="align-items: center;">
     <h1 style="padding: 10px;">Smart Sell&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small>product by <a href="http://ec-merchant.com">ec-merchant.com</a></small></h1>
   </div>
-  <h4>ログイン中：<%= @user %>&nbsp;&nbsp;&nbsp;&nbsp;<%= link_to "MWSアカウントの設定", :controller => "items", :action => "regist" %></h4>
-  <h4><%= link_to "ホーム画面", :controller => 'items', :action => 'show' %></h4>
+  <h4>ログイン中：<%= @user %>&nbsp;&nbsp;&nbsp;&nbsp;<%= link_to "MWSアカウントの設定", :controller => "items", :action => "regist" %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= link_to "ホーム画面", :controller => 'items', :action => 'show' %></h4>
   <p style="font-weight: bold;">ヤフオクの検索設定</p>
 
   <form id="frm" action="/items/setup" method="get">
@@ -234,7 +233,10 @@
   </table>
   <div class="sb cf">
 
-  <input type="submit" value="設定" class="b" id="btn">
+  <input type="submit" value="設定" class="btn btn-success" id="btn">
+  <br>
+  <br>
+  <br>
   </div>
 
   <input type="hidden" name="ei" value="UTF-8">
