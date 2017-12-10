@@ -4,17 +4,29 @@
 var maxRownum = 9600;
 var mydata = [];
 var colOption = [];
-var cheaders = ["出品","ASIN","商品タイトル","中古最安値","新品最安値","型番","⇒","検索URL","平均落札価格","候補URL","商品名","現在価格","即決価格","検索キー"];
+var cheaders = ["出品","ASIN","画像","商品タイトル","中古最安値","新品最安値","型番","⇒","検索URL","最高落札価格","候補URL","画像","商品名","現在価格","即決価格","検索キー"];
 var maxColnum = cheaders.length;
+
+
 
 for(var i = 0; i < maxRownum; i++){
   mydata[i] = [];
   for(var j = 0; j < maxColnum; j++){
     mydata[i][j] = "";
   }
-  mydata[i][6] = "⇒";
+  mydata[i][7] = "⇒";
+  mydata[i][0] = false;
 }
 
+for(var i = 0; i < maxColnum; i++){
+  colOption[i] = "";
+  if(i == 0){
+    colOption[i] = {type: 'checkbox', className: 'htCenter htMiddle'};
+  }
+  if(i == 2 || i == 8 || i == 10 || i == 11){
+    colOption[i] = {renderer: 'html', className: 'htCenter htMiddle'};
+  }
+}
 
 var container = document.getElementById('result');
 var handsontable = new Handsontable(container, {
@@ -30,7 +42,10 @@ var handsontable = new Handsontable(container, {
   maxRows: maxRownum,
   manualColumnResize: true,
   autoColumnSize: false,
-  colWidths:[40,60,120,80,80,80,20,80,80,80,140,80,80,80]
+  colWidths:[40,60,90,120,80,80,80,20,80,80,80,90,140,80,80,80],
+  rowHeights:70,
+  className: "htMiddle",
+  columns: colOption
 });
 
 
@@ -118,7 +133,21 @@ function repajax(url,pgnum,cnum){
 
 
 $("#connet_yahoo").click(function () {
+
   if(document.getElementById("connet_yahoo").innerText == "ヤフオク取得"){
+
+    var org = handsontable.getData();
+    for(var i = 0; i < org.length; i++){
+      for(var j = 0; j < org[i].length; j++){
+        if(j > 7){
+          org[i][j] = "";
+        }
+      }
+    }
+
+    handsontable.loadData(org);
+
+    alert("ヤフオクから情報を取得します");
     document.getElementById("connet_yahoo").innerText = "中断";
     document.getElementById("connet_yahoo").className = "btn btn-warning";
     document.getElementById("progress").value = "continue";
@@ -134,8 +163,9 @@ $("#connet_yahoo").click(function () {
 
 function ConnectYahoo(rownum){
 
+  var sr = rownum;
   var orgData = handsontable.getData();
-  var query = {title: orgData[rownum][2], mpn: orgData[rownum][5]};
+  var query = {title: orgData[rownum][2], mpn: orgData[rownum][6]};
   var myData = {data: query};
 
   if(document.getElementById("progress").value == "cancel"){
@@ -149,37 +179,23 @@ function ConnectYahoo(rownum){
     data: myData,
     dataType: 'json',
     success: function (resData) {
-      /*
-      if(resData == ""){
-        alert("終了しました");
-        document.getElementById("submit_url").innerText = "取得開始";
-        document.getElementById("submit_url").className = "btn btn-success";
-        return;
-      }
-      var org_data = handsontable.getData();
-      for(var i = 0; i < org_data.length; i++){
-        if(org_data[i][1] == ""){
-          org_data.length = i;
-          break;
-        }
-      }
 
-      var ddnum = org_data.length;
+      var nData = [];
+      for(var j = 0; j < resData.length; j++){
+        nData[j] = [rownum,8+j,resData[j]];
+      }
+      handsontable.setDataAtCell(nData);
+      sr++;
+      var lp = handsontable.getData().length;
 
-      Array.prototype.push.apply(org_data, resData);
-      if(org_data.length >= maxnum){
-        org_data.length = maxnum;
-        handsontable.loadData(org_data);
-        alert("終了しました");
-        document.getElementById("submit_url").innerText = "取得開始";
-        document.getElementById("submit_url").className = "btn btn-success";
-        return;
+      if(sr < lp){
+        sleep(500,ConnectYahoo(sr));
       }else{
-        handsontable.loadData(org_data);
-        pgnum++;
-        sleep(1500,repajax(url,pgnum,cnum));
+        alert("終了しました");
+        document.getElementById("connet_yahoo").innerText = "ヤフオク取得";
+        document.getElementById("connet_yahoo").className = "btn btn-success";
+        document.getElementById("progress").value = "cancel";
       }
-      */
     },
     error: function (resData) {
       return false;
@@ -221,7 +237,7 @@ var selected_handsontable = new Handsontable(selected_container, {
   /* オプション */
   width: 480,
   height: 60,
-  colWidths: [400],
+  colWidths: [480],
   //data: mydata,
   data: init,
   colHeaders: ["選択中のセル"],

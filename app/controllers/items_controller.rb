@@ -4,6 +4,7 @@ class ItemsController < ApplicationController
   require 'open-uri'
   require 'peddler'
   require 'amazon/ecs'
+  require 'uri'
 
   before_action :authenticate_user!
 
@@ -91,8 +92,7 @@ class ItemsController < ApplicationController
     doc = Nokogiri::HTML.parse(html, charset)
     doc.css('li/@data-asin').each do |list|
       cnum += 1
-      logger.debug(cnum)
-      logger.debug(list.value)
+
       if cnum > maxnum then
         break;
       end
@@ -146,12 +146,11 @@ class ItemsController < ApplicationController
     for ta in data
       asin[i] = ta[1]
       key = key + ta[1] + ","
-
       i += 1
-      logger.debug(i)
-      logger.debug("\n")
+
       if i == 10 then
         logger.debug(i)
+        logger.debug("key=" + key)
 
         parser = client.get_lowest_offer_listings_for_asin(asin,{item_condition: 'Used'})
         doc = Nokogiri::XML(parser.body)
@@ -175,11 +174,24 @@ class ItemsController < ApplicationController
           mpn = ""
           title = item.get('ItemAttributes/Title')
           lowprice = item.get('OfferSummary/LowestNewPrice/Amount')
-          mpn = item.get('ItemAttributes/MPN')
+          image = item.get('MediumImage/URL')
+          if image == nil then
+            image = item.get('ImageSets/ImageSet/MediumImage/URL')
+          end
 
-          data[k][2] = title
-          data[k][4] = lowprice
-          data[k][5] = mpn
+          if lowprice == nil then
+            lowprice = 0
+          end
+          mpn = item.get('ItemAttributes/MPN')
+          if image != nil then
+            data[k][2] = '<img src="' + image + '" width="80" height="60">'
+          else
+            data[k][2] = ""
+          end
+          data[k][3] = title
+          data[k][5] = lowprice
+          data[k][6] = mpn
+          data[k][7] = "⇒"
           k += 1
         end
 
@@ -190,9 +202,9 @@ class ItemsController < ApplicationController
           if temp != nil then
             lowest = temp.text
           else
-            lowest = "-"
+            lowest = 0
           end
-          data[j][3] = String(lowest.to_i)
+          data[j][4] = String(lowest.to_i)
           j += 1
         end
 
@@ -202,8 +214,8 @@ class ItemsController < ApplicationController
       end
     end
 
-    if i > 0 then
-
+    if i > 0  then
+      logger.debug("key=" + key)
       parser = client.get_lowest_offer_listings_for_asin(asin,{item_condition: 'Used'})
       doc = Nokogiri::XML(parser.body)
       doc.remove_namespaces!
@@ -214,9 +226,9 @@ class ItemsController < ApplicationController
         if temp != nil then
           lowest = temp.text
         else
-          lowest = "-"
+          lowest = 0
         end
-        data[j][3] = String(lowest.to_i)
+        data[j][4] = String(lowest.to_i)
         j += 1
       end
 
@@ -235,12 +247,25 @@ class ItemsController < ApplicationController
         lowprice = 0
         mpn = ""
         title = item.get('ItemAttributes/Title')
+        image = item.get('MediumImage/URL')
+        if image == nil then
+          image = item.get('ImageSets/ImageSet/MediumImage/URL')
+        end
         lowprice = item.get('OfferSummary/LowestNewPrice/Amount')
-        mpn = item.get('ItemAttributes/MPN')
 
-        data[k][2] = title
-        data[k][4] = lowprice
-        data[k][5] = mpn
+        if lowprice == nil then
+          lowprice = 0
+        end
+        mpn = item.get('ItemAttributes/MPN')
+        if image != nil then
+          data[k][2] = '<img src="' + image + '" width="80" height="60">'
+        else
+          data[k][2] = ""
+        end
+        data[k][3] = title
+        data[k][5] = lowprice
+        data[k][6] = mpn
+        data[k][7] = "⇒"
         k += 1
       end
 
@@ -254,22 +279,53 @@ class ItemsController < ApplicationController
     title = body[:title]
     mpn = body[:mpn]
 
+    logger.debug(body)
+
     cuser = current_user.email
     account = Rule.find_by(user:cuser)
 
+    keyword = mpn
+
+    enc_keyword = URI.escape(keyword)
+
     if account != nil then
       surl = account.url
-      surl = surl.gsub("query",mpn)
+      surl = surl.gsub("query",enc_keyword)
       eurl = surl.gsub("search/search?","closedsearch/closedsearch?")
     else
 
     end
 
-    logger.debug(surl)
+    #終了したオークションへのアクセス
+    charset = nil
+    html = open(eurl) do |f|
+      charset = f.charset # 文字種別を取得
+      f.read # htmlを読み込んで変数htmlに渡す
+    end
+    doc = Nokogiri::HTML.parse(html, nil, charset)
+
+    temp = doc.xpath('//span[@class="ePrice"]')
+
+    ePrices = []
+    i = 0
+    temp.each do |elem|
+      ePrices[i] = CCur(elem.inner_text)
+      i += 1
+    end
 
 
+    #落札平均価格、最高価格、最低価格（過去50件分）
+    if ePrices[0] != nil then
+      avgPrice = ePrices.inject(0.0){|r,i| r+=i }/ePrices.size
+      maxPrice = ePrices.max
+      minPrice = ePrices.min
+    else
+      avgPrice = 0
+      maxPrice = 0
+      minPrice = 0
+    end
 
-
+    #開催中オークションへのアクセス
     charset = nil
     html = open(surl) do |f|
       charset = f.charset # 文字種別を取得
@@ -277,12 +333,58 @@ class ItemsController < ApplicationController
     end
     doc = Nokogiri::HTML.parse(html, nil, charset)
 
-    res = {
-      url: surl,
 
-    }
+    temp = doc.xpath('//td[@class="i"]')[0]
 
-    render json:body
+    if temp != nil then
+      furl = temp.css('a')[0][:href]
+      title = doc.xpath('//h3')[0].inner_text
+      image = temp.css('img')[0][:src]
+      image = '<img src="' + image + '" width="80" height="60">'
+      cPrice = doc.xpath('//td[@class="pr1"]/text()')[0]
+      bPrice = doc.xpath('//td[@class="pr2"]/text()')[0]
+      if cPrice != nil then
+        cPrice = cPrice.inner_text
+        cPrice = CCur(cPrice)
+      else
+        cPrice = 0
+      end
+
+      if bPrice != nil then
+        bPrice = bPrice.inner_text
+        bPrice = CCur(bPrice)
+      else
+        bPrice = 0
+      end
+
+    else
+      furl = ""
+      title = "該当なし"
+      image = ""
+      cPrice = 0
+      bPrice = 0
+    end
+
+    if surl != nil && surl != "" then
+      surl = '<a href="' + surl + '" target="_blank">' + surl + '</a>'
+    end
+
+    if furl != nil && furl != "" then
+      furl = '<a href="' + furl + '" target="_blank">' + furl + '</a>'
+    end
+
+    result = [
+      surl,
+      maxPrice,
+      furl,
+      image,
+      title,
+      cPrice,
+      bPrice,
+      keyword
+    ];
+
+    render json:result
   end
 
   def setup
@@ -307,6 +409,14 @@ class ItemsController < ApplicationController
 
     logger.debug(surl.to_s)
 
+  end
+
+  private def CCur(value)
+    res = value.gsub(/\,/,"")
+    res = res.gsub(/円/,"")
+    res = res.gsub(/ /,"")
+    res = res.to_i
+    return res
   end
 
 end
