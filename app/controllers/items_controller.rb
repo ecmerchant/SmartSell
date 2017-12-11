@@ -282,8 +282,6 @@ class ItemsController < ApplicationController
     title = body[:title]
     mpn = body[:mpn]
 
-    logger.debug(body)
-
     cuser = current_user.email
     account = Rule.find_by(user:cuser)
 
@@ -359,13 +357,14 @@ class ItemsController < ApplicationController
       else
         bPrice = 0
       end
-
+      aucid = furl[furl.index("auction/")+8..-1]
     else
       furl = ""
       title = "該当なし"
       image = ""
       cPrice = 0
       bPrice = 0
+      aucid = ""
     end
 
     if surl != nil && surl != "" then
@@ -373,6 +372,23 @@ class ItemsController < ApplicationController
     end
 
     if furl != nil && furl != "" then
+
+      charset = nil
+      html = open(furl) do |f|
+        charset = f.charset # 文字種別を取得
+        f.read # htmlを読み込んで変数htmlに渡す
+      end
+      doc = Nokogiri::HTML.parse(html, nil, charset)
+
+      temp = doc.xpath('//ul[@class="ProductImage__images"]')[0]
+
+      images = temp.css('img')
+      b = 0
+      imgs = []
+      for img in images
+        imgs[b] = img[:src]
+        b += 1
+      end
       furl = '<a href="' + furl + '" target="_blank">' + furl + '</a>'
     end
 
@@ -382,11 +398,26 @@ class ItemsController < ApplicationController
       furl,
       image,
       title,
+      aucid,
       cPrice,
       bPrice,
       keyword
     ];
 
+    maxnumber = 5
+    if furl != nil && furl != "" then
+      for p in 0..maxnumber
+        if p > imgs.length then
+          result.push("")
+        else
+          result.push(imgs[p])
+        end
+      end
+    else
+      for p in 0..maxnumber
+        result.push("")
+      end
+    end
     render json:result
   end
 

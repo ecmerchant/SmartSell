@@ -4,7 +4,7 @@
 var maxRownum = 9600;
 var mydata = [];
 var colOption = [];
-var cheaders = ["出品","ASIN","画像","商品タイトル","中古最安値","新品最安値","型番","⇒","検索URL","最高落札価格","候補URL","画像","商品名","現在価格","即決価格","検索キー"];
+var cheaders = ["出品","ASIN","画像","商品タイトル","中古最安値","新品最安値","型番","⇒","検索URL","最高落札価格","候補URL","画像","商品名","ID","現在価格","即決価格","検索キー","画像1","画像2","画像3","画像4","画像5","画像6"];
 var maxColnum = cheaders.length;
 
 
@@ -32,7 +32,7 @@ var container = document.getElementById('result');
 var handsontable = new Handsontable(container, {
   /* オプション */
   width: 1160,
-  height: 380,
+  height: 360,
   contextMenu: true,
   data: mydata,
   wordWrap: false,
@@ -42,7 +42,7 @@ var handsontable = new Handsontable(container, {
   maxRows: maxRownum,
   manualColumnResize: true,
   autoColumnSize: false,
-  colWidths:[40,60,90,120,80,80,80,20,80,80,80,90,140,80,80,80],
+  colWidths:[40,60,90,120,80,80,80,20,80,80,80,90,140,80,80,80,80,40,40,40,40,40,40],
   rowHeights:70,
   className: "htMiddle",
   columns: colOption
@@ -165,7 +165,7 @@ function ConnectYahoo(rownum){
 
   var sr = rownum;
   var orgData = handsontable.getData();
-  var query = {title: orgData[rownum][2], mpn: orgData[rownum][6]};
+  var query = {title: orgData[rownum][3], mpn: orgData[rownum][6]};
   var myData = {data: query};
 
   if(document.getElementById("progress").value == "cancel"){
@@ -235,13 +235,14 @@ init[0][0] = "";
 
 var selected_handsontable = new Handsontable(selected_container, {
   /* オプション */
-  width: 480,
+  width: 640,
   height: 60,
-  colWidths: [480],
+  colWidths: [540],
   //data: mydata,
+  rowHeaderWidth: 100,
   data: init,
-  colHeaders: ["選択中のセル"],
-  rowHeaders: false,
+  colHeaders: false,
+  rowHeaders: ["選択中のセル"],
   maxRows: 1,
   manualColumnResize: true,
   autoColumnSize: true,
@@ -264,18 +265,10 @@ Handsontable.hooks.add('afterSelectionEnd', function() {
 var maxRownum_csv = 9600;
 var mydata_csv = [];
 var colOption_csv = [];
-//var cheaders_csv = ["出品","ASIN","画像","商品タイトル","中古最安値","新品最安値","型番","⇒","検索URL","最高落札価格","候補URL","画像","商品名","現在価格","即決価格","検索キー"];
 var maxColnum_csv = 28;
 
 var mydata_csv = gon.csv_head
 
-/*
-for(var i = 0; i < maxRownum_csv; i++){
-  mydata_csv[i] = [];
-  for(var j = 0; j < maxColnum_csv; j++){
-    mydata_csv[i][j] = "";
-  }
-}*/
 
 for(var i = 0; i < maxColnum_csv; i++){
   colOption_csv[i] = "";
@@ -311,13 +304,15 @@ init[0][0] = "";
 
 var selected_csv_handsontable = new Handsontable(selected_csv_container, {
   /* オプション */
-  width: 480,
+  width: 640,
   height: 60,
-  colWidths: [480],
+  colWidths: [540],
+  //data: mydata,
+  rowHeaderWidth: 100,
   //data: mydata,
   data: init,
-  colHeaders: ["選択中のセル"],
-  rowHeaders: false,
+  colHeaders: false,
+  rowHeaders: ["選択中のセル"],
   maxRows: 1,
   manualColumnResize: true,
   autoColumnSize: true,
@@ -340,6 +335,52 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
   handsontable_csv.render();
   // 処理,,,,,
 })
+
+
+$("#setcsv").click(function () {
+
+  var orgdata = handsontable.getData();
+  var csvdata = handsontable_csv.getData();
+  var j = 0;
+  var col = csvdata[2].length;
+
+  for(var i = 0; i < orgdata.length; i++){
+    if(orgdata[i][0] == true){
+      csvdata[3+j] = [];
+      for(var k = 0; k < col; k++){
+        csvdata[3+j][k] = "";
+      }
+
+      var sellprice = Math.max(orgdata[i][14],orgdata[i][15]);
+      var point = 0.01;
+      var ampoint = Math.round(sellprice * point);
+      var quantity = 1;
+
+      csvdata[3+j][0] = orgdata[i][13];
+      csvdata[3+j][1] = sellprice;
+      csvdata[3+j][2] = ampoint;
+      csvdata[3+j][3] = quantity;
+      csvdata[3+j][4] = "";
+      csvdata[3+j][5] = "";
+      csvdata[3+j][6] = "";
+      csvdata[3+j][7] = "";
+      csvdata[3+j][8] = orgdata[i][1];
+
+
+      csvdata[3+j][22] = orgdata[i][18];
+      csvdata[3+j][23] = orgdata[i][19];
+      csvdata[3+j][24] = orgdata[i][20];
+      csvdata[3+j][25] = orgdata[i][21];
+      csvdata[3+j][26] = orgdata[i][22];
+      csvdata[3+j][27] = orgdata[i][23];
+
+      j++;
+    }
+  }
+
+  handsontable_csv.loadData(csvdata);
+});
+
 
 
 function sleep(time, callback){
