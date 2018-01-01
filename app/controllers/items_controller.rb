@@ -18,11 +18,6 @@ class ItemsController < ApplicationController
     csv_data = CSV.read('app/others/csv/Flat.File.Listingloader.jp.csv', headers: true)
     gon.csv_head = csv_data
     account = FixedDatum.find_by(User: current_user.email)
-
-    logger.debug(csv_data)
-    logger.debug("\n")
-    logger.debug(account.list)
-
     if account != nil then
       res = account.list
       gon.list = account.list
