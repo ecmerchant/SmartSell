@@ -59,7 +59,7 @@ class ItemsController < ApplicationController
       logger.debug(Mws.select("AWSkey"))
       if temp != nil then
         logger.debug("MWS is found")
-        @account = Mws.find_by(user:current_email)
+        @account = Mws.find_by(User:current_email)
         @res1 = temp.AWSkey
         @res2 = temp.Skey
         @res3 = temp.SellerId
