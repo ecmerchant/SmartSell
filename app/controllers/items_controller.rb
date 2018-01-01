@@ -17,7 +17,7 @@ class ItemsController < ApplicationController
     @user = current_user.email
     csv_data = CSV.read('app/others/csv/Flat.File.Listingloader.jp.csv', headers: true)
     gon.csv_head = csv_data
-    account = FixedDatum.find_by(User: current_user.email)
+    account = Fvalue.find_by(User: current_user.email)
     if account != nil then
       res = account.list
       gon.list = account.list
@@ -698,7 +698,7 @@ class ItemsController < ApplicationController
       cuser = current_user.email
       list = params[:data]
       list = JSON.parse(list)
-      account = FixedDatum.find_by(user:cuser)
+      account = Fvalue.find_by(user:cuser)
 
       if account != nil then
         account.update(
@@ -706,7 +706,7 @@ class ItemsController < ApplicationController
           list: list
         )
       else
-        FixedDatum.create(
+        Fvalue.create(
           user: cuser,
           list: list
         )

@@ -10,13 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180101114852) do
+ActiveRecord::Schema.define(version: 20180101150326) do
 
   create_table "fixed_data", force: :cascade do |t|
     t.text     "list"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string   "user"
+  end
+
+  create_table "fvalues", force: :cascade do |t|
+    t.string   "user"
+    t.text     "list"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "mws", force: :cascade do |t|
