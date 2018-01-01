@@ -17,7 +17,7 @@ class ItemsController < ApplicationController
     @user = current_user.email
     csv_data = CSV.read('app/others/csv/Flat.File.Listingloader.jp.csv', headers: true)
     gon.csv_head = csv_data
-    account = Fvalue.find_by(User: current_user.email)
+    account = Fvalue.find_by(user: current_user.email)
     if account != nil then
       res = account.list
       gon.list = account.list
