@@ -6,60 +6,71 @@
 
   <ul class="nav nav-tabs" role="tablist">
     <li class="active" role="presentation">
-      <a aria-controls="tab_a" data-toggle="tab" href="#tab_a" role="tab">商品情報の取得</a>
+      <a aria-controls="tab_a" data-toggle="tab" href="#tab_a" role="tab" id="tab1">1.商品情報の取得</a>
     </li>
     <li role="presentation">
-      <a aria-controls="tab_b" data-toggle="tab" href="#tab_b" role="tab">出品CSVの作成</a>
+      <a aria-controls="tab_b" data-toggle="tab" href="#tab_b" role="tab" id="tab2">2.出品CSVの作成</a>
     </li>
     <li role="presentation">
-      <a aria-controls="tab_c" data-toggle="tab" href="#tab_c" role="tab">C</a>
+      <a aria-controls="tab_c" data-toggle="tab" href="#tab_c" role="tab" id="tab3">3.出品情報の設定</a>
     </li>
   </ul>
   <br>
-
   <div class="tab-content">
     <div class="tab-pane active" id="tab_a" role="tabpanel">
-
-      <div class="row">
-        <form class="form-inline">
-          <div class="form-group col-sm-2">
-            <label for="maxnumber">取得件数</label>
-            <input type="number" id="maxnumber" value="9600" class="form-control" style="width: 80px;">
-          </div>
-          <div class="form-group col-sm-4">
-            <input type="text" id="input_url" class="form-control" placeholder="Input Amazon URL Here .." >
-            <button id="submit_url" class="btn btn-success" type="button" >取得開始</button>
-          </div>
-          <div class="form-group col-sm-2">
-            <button id="connet_yahoo" class="btn btn-success" type="button" style="width: 120px;">ヤフオク取得</button>
-          </div>
-          <div class="form-group col-sm-1">
-            <button id="setcsv" class="btn btn-success" type="button" style="width: 100px;">CSV作成</button>
-          </div>
-        </form>
-      </div>
+      <form class="form-inline form-group">
+        <div class="form-group">
+          <label for="maxnumber">取得件数</label>
+          <input type="number" id="maxnumber" value="9600" class="form-control" style="width: 80px;">
+        </div>
+        &nbsp;&nbsp;
+        <div class="form-group">
+          <label for="input_url">アマゾンURLの入力</label>
+          <input type="text" id="input_url" class="form-control" placeholder="Input Amazon URL Here .." >
+        </div>
+        <div class="form-group">
+          <button id="submit_url" class="btn btn-success" type="button" style="width: 120px;">アマゾン取得</button>
+        </div>
+        &nbsp;
+        <div class="form-group">
+          <button id="connet_yahoo" class="btn btn-success" type="button" style="width: 120px;">ヤフオク取得</button>
+        </div>
+        &nbsp;
+        <div class="form-group">
+          <button id="reload_yahoo" class="btn btn-success" type="button" style="width: 120px;">データの更新</button>
+        </div>
+        &nbsp;
+        <div class="form-group">
+          <button id="setcsv" class="btn btn-success" type="button" style="width: 100px;">CSV作成</button>
+        </div>
+        <div class="form-group">
+          <button id="hide" class="btn btn-success" type="button" style="width: 80px;">非表示</button>
+        </div>
+      </form>
       <input id="progress" value="continue" type="hidden" />
-      <!--
-      <% @tt=Time.now.strftime("_%Y%m%d%H%M") %>
-
-      <div>
-        <a href="#" id="output" download="list<%= @tt %>.txt" class="btn btn-success" style="width: 80px;">ASIN出力</a>
-      </div>
-      -->
       <br>
       <div id="selected"></div>
       <div id="result"></div>
     </div>
+
     <div class="tab-pane" id="tab_b" role="tabpanel">
-      <br>
+      <p>出品CSVの確認</p>
+      <button id="upload" class="btn btn-success" type="button" style="width: 140px;">CSVアップロード</button>
+      &nbsp;
+      <% @tt=Time.now.strftime("_%Y%m%d%H%M") %>
+      <a href="#" id="output" download="list<%= @tt %>.txt" class="btn btn-success" style="width: 80px;">CSV出力</a>
+      <br><br>
       <div id="selected_csv"></div>
       <div id="result_csv"></div>
     </div>
+
     <div class="tab-pane" id="tab_c" role="tabpanel">
-      <p>
-        タブC!!
-      </p>
+      <p>出品CSV作成時の詳細項目を設定</p>
+      <button id="fixed_save" class="btn btn-success" type="button" style="width: 140px;">CSV設定保存</button>
+      <br><br>
+      <div id="fixed_csv"></div>
     </div>
+
   </div>
 </div>
 <%= javascript_include_tag 'items_show', 'data-turbolinks-track': 'reload'  %>

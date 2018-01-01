@@ -14,3 +14,4 @@ Rails.application.config.assets.precompile += %w( handsontable.full.css )
 Rails.application.config.assets.precompile += %w( encoding.js )
 
 Rails.application.config.assets.precompile += %w( items_show.js )
+Rails.application.config.assets.precompile += %w( items_setup.css )

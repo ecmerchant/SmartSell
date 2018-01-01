@@ -8,8 +8,15 @@ Rails.application.routes.draw do
   post 'items/search'
 
   get 'items/setup'
+  post 'items/setup'
+
+  post 'items/upload'
 
   post 'items/connect'
+
+  post 'items/reload'
+
+  post 'items/save'
 
   get 'items/regist'
   post 'items/regist'

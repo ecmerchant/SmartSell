@@ -1,3 +1,4 @@
+<%= stylesheet_link_tag "items_setup", :media => "all" %>
 <div class="container">
   <div class="bg-success" style="align-items: center;">
     <h1 style="padding: 10px;">Smart Sell&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small>product by <a href="http://ec-merchant.com">ec-merchant.com</a></small></h1>
@@ -5,248 +6,274 @@
   <h4>ログイン中：<%= @user %>&nbsp;&nbsp;&nbsp;&nbsp;<%= link_to "MWSアカウントの設定", :controller => "items", :action => "regist" %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= link_to "ホーム画面", :controller => 'items', :action => 'show' %></h4>
   <p style="font-weight: bold;">ヤフオクの検索設定</p>
 
-  <form id="frm" action="/items/setup" method="get">
+  <form id="frm" action="/items/setup" method="post">
+    <table class="table table-bordered">
+      <!-- .tr0 -->
+      <tr class="tr0">
+        <th class="t2 active">キーワード</th>
+        <td class="a">
+          <fieldset>
+            <legend>キーワード</legend>
+            <p class="stype">
+              <input type="hidden" value="query" name="va" id="f0v0" autocomplete="on" placeholder="すべて含む">
+            </p>
+            <p class="stype">
+              <span>少なくとも一つを含む</span>
+              <input type="search" value="" name="vo" id="f0v1" autocomplete="on" placeholder="少なくとも一つを含む">
+            </p>
+            <p class="stype">
+              <span>含めない</span>
+              <input type="search" value="ジャンク" name="ve" id="f0v2" autocomplete="on" placeholder="含めない">
+            </p>
+            <dl class="ngrm">
+              <dt>検索対象</dt>
+              <dd>
+                <label><input type="radio" name="ngrm" value="0" id="f_0x2">タイトル</label>
+                <label><input type="radio" name="ngrm" value="2" id="f_0x4" checked="checked">タイトルと商品説明</label>
+                <label><input type="radio" name="ngrm" value="1" id="ngram_1">あいまい検索</label>
+              </dd>
+            </dl>
+          </fieldset>
+        </td>
+      </tr><!-- /.tr0 -->
+      <!-- .tr4 -->
+      <tr class="tr4">
+        <th class="t2 active">購入方法</th>
+        <td class="a">
+          <fieldset>
+            <legend>購入方法</legend>
+            <p><label><input type="radio" name="fixed" id="" value="0">すべて</label></p>
+            <p><label><input type="radio" name="fixed" id="" value="2" checked>オークション</label></p>
+            <p><label><input type="radio" name="fixed" id="" value="1">フリマ</label></p>
+          </fieldset>
+        </td>
+      </tr><!-- /.tr4 -->
 
-  <table cellspacing="0" cellpadding="0"　class="table table-bordered">
+      <!-- .tr1 -->
+      <tr class="tr1">
+        <th class="t2 active">カテゴリ</th>
+        <td class="a">
+          <fieldset>
+            <legend>カテゴリ</legend>
+            <div class="l"><label for="other_cat0"><input name="auccat" type="radio" id="other_cat0" value="0" checked>すべて</label></div>
+            <div id ="cat">
+              <ul>
+                <li><label for="other_cat1"><input type="radio" name="auccat" id="other_cat1" value="23336">コンピュータ</label></li>
+                <li><label for="other_cat2"><input type="radio" name="auccat" id="other_cat2" value="23632">家電、AV、カメラ</label></li>
+                <li><label for="other_cat3"><input type="radio" name="auccat" id="other_cat3" value="22152">音楽</label></li>
+                <li><label for="other_cat4"><input type="radio" name="auccat" id="other_cat4" value="21600">本、雑誌</label></li>
+                <li><label for="other_cat5"><input type="radio" name="auccat" id="other_cat5" value="21964">映画、ビデオ</label></li>
+                <li><label for="other_cat6"><input type="radio" name="auccat" id="other_cat6" value="25464">おもちゃ、ゲーム</label></li>
+                <li><label for="other_cat7"><input type="radio" name="auccat" id="other_cat7" value="24242">ホビー、カルチャー</label></li>
+                <li><label for="other_cat8"><input type="radio" name="auccat" id="other_cat8" value="20000">アンティーク、コレクション</label></li>
+                <li><label for="other_cat9"><input type="radio" name="auccat" id="other_cat9" value="24698">スポーツ、レジャー</label></li>
+                <li><label for="other_cat10"><input type="radio" name="auccat" id="other_cat10" value="26318">自動車、オートバイ</label></li>
+                <li><label for="other_cat11"><input type="radio" name="auccat" id="other_cat11" value="23000">ファッション</label></li>
+                <li><label for="other_cat12"><input type="radio" name="auccat" id="other_cat12" value="23140">アクセサリー、時計</label></li>
+                <li><label for="other_cat13"><input type="radio" name="auccat" id="other_cat13" value="42177">ビューティー、ヘルスケア</label></li>
+              </ul>
+              <ul>
+                <li><label for="other_cat14"><input type="radio" name="auccat" id="other_cat14" value="23976">食品、飲料</label></li>
+                <li><label for="other_cat15"><input type="radio" name="auccat" id="other_cat15" value="24198">住まい、インテリア</label></li>
+                <li><label for="other_cat16"><input type="radio" name="auccat" id="other_cat16" value="2084055844">ペット、生き物</label></li>
+                <li><label for="other_cat17"><input type="radio" name="auccat" id="other_cat17" value="22896">事務、店舗用品</label></li>
+                <li><label for="other_cat18"><input type="radio" name="auccat" id="other_cat18" value="26086">花、園芸</label></li>
+                <li><label for="other_cat19"><input type="radio" name="auccat" id="other_cat19" value="2084043920">チケット、金券、宿泊予約</label></li>
+                <li><label for="other_cat20"><input type="radio" name="auccat" id="other_cat20" value="24202">ベビー用品</label></li>
+                <li><label for="other_cat21"><input type="radio" name="auccat" id="other_cat21" value="2084032594">タレントグッズ</label></li>
+                <li><label for="other_cat22"><input type="radio" name="auccat" id="other_cat22" value="20060">コミック、アニメグッズ</label></li>
+                <li><label for="other_cat23"><input type="radio" name="auccat" id="other_cat23" value="2084060731">不動産</label></li>
+                <li><label for="other_cat24"><input type="radio" name="auccat" id="other_cat24" value="2084217893">チャリティー</label></li>
+                <li><label for="other_cat25"><input type="radio" name="auccat" id="other_cat25" value="26084">その他</label></li>
+              </ul>
+            </div>
+          </fieldset>
+        </td>
+      </tr><!-- /.tr1 -->
 
+      <!-- .tr2 -->
+      <tr class="tr2">
+        <th class="t2 active">現在価格</th>
+        <td class="a">
+          <fieldset>
+            <legend>現在価格</legend>
+            <input type="text" name="aucminprice" size="28" maxlength="10" value="" class="itx3" autocomplete="on"><span>円～</span>
+            <input type="text" name="aucmaxprice" size="28" maxlength="10" value="" class="itx3" autocomplete="on"><span>円</span>
+          </fieldset>
+        </td>
+      </tr><!-- /.tr2 -->
 
-  <!-- .tr0 -->
-  <tr class="tr0">
-  <th class="t2">キーワード
-  </th>
-  <td class="a">
-  <fieldset>
-  <legend>キーワード</legend>
-  <p class="stype">
-  <input type="hidden" value="query" name="va" id="f0v0" autocomplete="on" placeholder="すべて含む">
-  </p>
-  <p class="stype">
-  <span>少なくとも一つを含む</span>
-  <input type="search" value="" name="vo" id="f0v1" autocomplete="on" placeholder="少なくとも一つを含む">
-  </p>
-  <p class="stype">
-  <span>含めない</span>
-  <input type="search" value="ジャンク" name="ve" id="f0v2" autocomplete="on" placeholder="含めない">
-  </p>
-  <dl class="ngrm">
-  <dt>検索対象</dt>
-  <dd>
-  <label><input type="radio" name="ngrm" value="0" id="f_0x2">タイトル</label>
-  <label><input type="radio" name="ngrm" value="2" id="f_0x4" checked="checked">タイトルと商品説明</label>
-  <label><input type="radio" name="ngrm" value="1" id="ngram_1">あいまい検索</label><a href="https://www.yahoo-help.jp/app/answers/detail/p/353/a_id/40651#aimai"><span>ヘルプ</span></a>
-  </dd>
-  </dl>
-  </fieldset>
-  </td>
-  </tr><!-- /.tr0 -->
-  <!-- .tr4 -->
-  <tr class="tr4">
-  <th class="t2">購入方法</th>
-  <td class="a">
-  <fieldset>
-  <legend>購入方法</legend>
-  <p><label><input type="radio" name="fixed" id="" value="0">すべて</label></p>
-  <p><label><input type="radio" name="fixed" id="" value="2" checked>オークション</label></p>
-  <p><label><input type="radio" name="fixed" id="" value="1">フリマ</label></p>
-  </fieldset></td>
-  </tr><!-- /.tr4 -->
+      <!-- .tr2 -->
+      <tr class="tr2">
+        <th class="t2 active">即決価格</th>
+        <td class="a">
+          <fieldset>
+            <legend>即決価格</legend>
+            <input type="text" name="aucmin_bidorbuy_price" maxlength="10" size="28" value="" class="itx3" autocomplete="on"><span>円～</span>
+            <input type="text" name="aucmax_bidorbuy_price" maxlength="10" size="28" value="" class="itx3" autocomplete="on"><span>円</span>
+          </fieldset>
+        </td>
+      </tr><!-- /.tr2 -->
+      <!-- .tr3 -->
+      <tr class="tr3">
+        <th class="t2 active">出品地域</th>
+          <td class="a">
+          <fieldset id="loc">
+            <legend>出品地域</legend>
+            <div class="l">
+              <label for="loc_cd0"><input name="l0" type="checkbox" id="loc_cd0" value="0" checked="checked">すべて</label>
+            </div>
+            <ul>
+              <li><label for="loc_cd1"><input type="checkbox" name="lc1" id="loc_cd1" value="1">北海道</label></li>
+              <li><label for="loc_cd2"><input type="checkbox" name="lc2" id="loc_cd2" value="2">青森県</label></li>
+              <li><label for="loc_cd3"><input type="checkbox" name="lc3" id="loc_cd3" value="3">岩手県</label></li>
+              <li><label for="loc_cd4"><input type="checkbox" name="lc4" id="loc_cd4" value="4">宮城県</label></li>
+              <li><label for="loc_cd5"><input type="checkbox" name="lc5" id="loc_cd5" value="5">秋田県</label></li>
+              <li><label for="loc_cd6"><input type="checkbox" name="lc6" id="loc_cd6" value="6">山形県</label></li>
+              <li><label for="loc_cd7"><input type="checkbox" name="lc7" id="loc_cd7" value="7">福島県</label></li>
+              <li><label for="loc_cd8"><input type="checkbox" name="lc8" id="loc_cd8" value="8">茨城県</label></li>
+              <li><label for="loc_cd9"><input type="checkbox" name="lc9" id="loc_cd9" value="9">栃木県</label></li>
+              <li><label for="loc_cd10"><input type="checkbox" name="lc10" id="loc_cd10" value="10">群馬県</label></li>
+              <li><label for="loc_cd11"><input type="checkbox" name="lc11" id="loc_cd11" value="11">埼玉県</label></li>
+              <li class="l"><label for="loc_cd12"><input type="checkbox" name="lc12" id="loc_cd12" value="12">千葉県</label></li>
+            </ul>
+            <ul>
+              <li><label for="loc_cd13"><input type="checkbox" name="lc13" id="loc_cd13" value="13">東京都</label></li>
+              <li><label for="loc_cd14"><input type="checkbox" name="lc14" id="loc_cd14" value="14">神奈川県</label></li>
+              <li><label for="loc_cd15"><input type="checkbox" name="lc15" id="loc_cd15" value="15">山梨県</label></li>
+              <li><label for="loc_cd16"><input type="checkbox" name="lc16" id="loc_cd16" value="16">長野県</label></li>
+              <li><label for="loc_cd17"><input type="checkbox" name="lc17" id="loc_cd17" value="17">新潟県</label></li>
+              <li><label for="loc_cd18"><input type="checkbox" name="lc18" id="loc_cd18" value="18">富山県</label></li>
+              <li><label for="loc_cd19"><input type="checkbox" name="lc19" id="loc_cd19" value="19">石川県</label></li>
+              <li><label for="loc_cd20"><input type="checkbox" name="lc20" id="loc_cd20" value="20">福井県</label></li>
+              <li><label for="loc_cd21"><input type="checkbox" name="lc21" id="loc_cd21" value="21">岐阜県</label></li>
+              <li><label for="loc_cd22"><input type="checkbox" name="lc22" id="loc_cd22" value="22">静岡県</label></li>
+              <li><label for="loc_cd23"><input type="checkbox" name="lc23" id="loc_cd23" value="23">愛知県</label></li>
+              <li class="l"><label for="loc_cd24"><input type="checkbox" name="lc24" id="loc_cd24" value="24">三重県</label></li>
+            </ul>
+            <ul>
+              <li><label for="loc_cd25"><input type="checkbox" name="lc25" id="loc_cd25" value="25">滋賀県</label></li>
+              <li><label for="loc_cd26"><input type="checkbox" name="lc26" id="loc_cd26" value="26">京都府</label></li>
+              <li><label for="loc_cd27"><input type="checkbox" name="lc27" id="loc_cd27" value="27">大阪府</label></li>
+              <li><label for="loc_cd28"><input type="checkbox" name="lc28" id="loc_cd28" value="28">兵庫県</label></li>
+              <li><label for="loc_cd29"><input type="checkbox" name="lc29" id="loc_cd29" value="29">奈良県</label></li>
+              <li><label for="loc_cd30"><input type="checkbox" name="lc30" id="loc_cd30" value="30">和歌山県</label></li>
+              <li><label for="loc_cd31"><input type="checkbox" name="lc31" id="loc_cd31" value="31">鳥取県</label></li>
+              <li><label for="loc_cd32"><input type="checkbox" name="lc32" id="loc_cd32" value="32">島根県</label></li>
+              <li><label for="loc_cd33"><input type="checkbox" name="lc33" id="loc_cd33" value="33">岡山県</label></li>
+              <li><label for="loc_cd34"><input type="checkbox" name="lc34" id="loc_cd34" value="34">広島県</label></li>
+              <li><label for="loc_cd35"><input type="checkbox" name="lc35" id="loc_cd35" value="35">山口県</label></li>
+              <li class="l"><label for="loc_cd36"><input type="checkbox" name="lc36" id="loc_cd36" value="36">徳島県</label></li>
+            </ul>
+            <ul>
+              <li><label for="loc_cd37"><input type="checkbox" name="lc37" id="loc_cd37" value="37">香川県</label></li>
+              <li><label for="loc_cd38"><input type="checkbox" name="lc38" id="loc_cd38" value="38">愛媛県</label></li>
+              <li><label for="loc_cd39"><input type="checkbox" name="lc39" id="loc_cd39" value="39">高知県</label></li>
+              <li><label for="loc_cd40"><input type="checkbox" name="lc40" id="loc_cd40" value="40">福岡県</label></li>
+              <li><label for="loc_cd41"><input type="checkbox" name="lc41" id="loc_cd41" value="41">佐賀県</label></li>
+              <li><label for="loc_cd42"><input type="checkbox" name="lc42" id="loc_cd42" value="42">長崎県</label></li>
+              <li><label for="loc_cd43"><input type="checkbox" name="lc43" id="loc_cd43" value="43">熊本県</label></li>
+              <li><label for="loc_cd44"><input type="checkbox" name="lc44" id="loc_cd44" value="44">大分県</label></li>
+              <li><label for="loc_cd45"><input type="checkbox" name="lc45" id="loc_cd45" value="45">宮崎県</label></li>
+              <li><label for="loc_cd46"><input type="checkbox" name="lc46" id="loc_cd46" value="46">鹿児島県</label></li>
+              <li><label for="loc_cd47"><input type="checkbox" name="lc47" id="loc_cd47" value="47">沖縄県</label></li>
+              <li class="l"><label for="loc_cd48"><input type="checkbox" name="lc48" id="loc_cd48" value="48">海外</label></li>
+            </ul>
+            <ul>
+            </ul>
+          </fieldset>
+        </td>
+      </tr><!-- /.tr3 -->
+      <!-- .tr4 -->
+      <tr class="tr4">
+        <th class="t2 active">出品者</th>
+        <td class="a">
+          <fieldset>
+            <legend>出品者</legend>
+            <p><label for="abatch0"><input type="radio" name="abatch" id="abatch0" value="0" checked>すべて</label></p>
+            <p><label for="abatch1"><input type="radio" name="abatch" id="abatch1" value="1">ストア</label></p>
+            <p><label for="abatch2"><input type="radio" name="abatch" id="abatch2" value="2">個人</label></p>
+          </fieldset>
+        </td>
+      </tr><!-- /.tr4 -->
+      <!-- .tr4 -->
+      <tr class="tr4">
+        <th class="t2 active">商品の状態</th>
+        <td class="a">
+          <fieldset>
+          <legend>商品の状態</legend>
+            <p><label for="istatus0"><input type="radio" name="istatus" id="istatus0" value="0" checked>すべて</label></p>
+            <p><label for="istatus1"><input type="radio" name="istatus" id="istatus1" value="1">新品</label></p>
+            <p><label for="istatus2"><input type="radio" name="istatus" id="istatus2" value="2">中古</label></p>
+          </fieldset>
+        </td>
+      </tr><!-- /.tr4 -->
 
-  <!-- .tr1 -->
-  <tr class="tr1">
-  <th class="t2">カテゴリ</th>
-  <td class="a">
-  <fieldset>
-  <legend>カテゴリ</legend>
-  <div class="l"><label for="other_cat0"><input name="auccat" type="radio" id="other_cat0" value="0" checked>すべて</label></div>
-  <div id ="cat">
-  <ul>
+      <!-- .tr5 -->
+      <tr class="tr5 ASic">
+        <th class="t2 active">オプション</th>
+        <td class="a">
+          <fieldset>
+            <legend>オプション</legend>
+            <div>
+              <p><label for="jpypayment"><input type="checkbox" name="jpypayment" id="jpypayment" value="1"><span class="pic2">かんたん決済</span>かんたん決済</label></p>
+              <p><label for="point"><input type="checkbox" name="point" id="point" value="1"><span class="pic3-v2">Ｔポイント</span>Ｔポイント</label></p>
+              <p><label for="new"><input type="checkbox" name="new" id="new" value="1"><span class="sic1">NEW</span>新着</label></p>
+              <p><label for="pstagefree"><input type="checkbox" name="pstagefree" id="pstagefree" value="1"><span class="pic4">送料無料</span></label></p>
+              <p><label for="offer"><input type="checkbox" name="offer" id="offer" value="1">値下げ交渉</label></p>
+              <p><label for="thumb"><input type="checkbox" name="thumb" id="thumb" value="1"><span class="sic5">画像あり</span>画像あり</label></p>
+              <p><label for="wrappingicon"><input type="checkbox" name="wrappingicon" id="wrappingicon" value="1"><span class="sic6">贈答品</span>贈答品</label></p>
+              <p class="convenience"><label for="shipping"><input type="checkbox" name="shipping" id="shipping" value="111">コンビニ受取<span>（ファミリーマート）</span>
+            </div>
+          </fieldset>
+        </td>
+      </tr><!-- /.tr5 -->
+      <!-- .tr6 -->
+      <tr class="tr6 ASic">
+        <th class="t2 active">目立ちアイコン</th>
+        <td class="a">
+          <fieldset>
+            <legend>目立ちアイコン</legend>
+            <div class="cf">
+              <p><label for="gift_icon0"><input type="radio" name="gift_icon" id="gift_icon0" value="0" checked="checked">指定しない</label></p>
+              <p><label for="gift_icon1"><input type="radio" name="gift_icon" id="gift_icon1" value="2"><span class="cic2">美品</span></label></p>
+              <p><label for="gift_icon2"><input type="radio" name="gift_icon" id="gift_icon2" value="3"><span class="cic3">非売品</span></label></p>
+              <p><label for="gift_icon3"><input type="radio" name="gift_icon" id="gift_icon3" value="4"><span class="cic4">限定品</span></label></p>
+            </div>
+            <div class="l cf">
+              <p><label for="gift_icon4"><input type="radio" name="gift_icon" id="gift_icon4" value="5"><span class="cic5">保証書付</span></label></p>
+              <p><label for="gift_icon5"><input type="radio" name="gift_icon" id="gift_icon5" value="6"><span class="cic6">全巻セット</span></label></p>
+              <p><label for="gift_icon6"><input type="radio" name="gift_icon" id="gift_icon6" value="7"><span class="cic7">正規店購入</span></label></p>
+              <p><label for="gift_icon7"><input type="radio" name="gift_icon" id="gift_icon7" value="8"><span class="cic8">産地直送</span></label></p>
+            </div>
+          </fieldset>
+        </td>
+      </tr><!-- /.tr6 -->
+      <!-- .tr7 -->
+      <tr class="tr7 ASic">
+        <th class="t2 active">みんなのチャリティー</th>
+        <td class="a">
+          <fieldset>
+            <legend>みんなのチャリティー</legend>
+            <div class="cf">
+              <p><label for="charity_icon0"><input type="radio" name="charity" id="charity_icon0" value="" checked="checked">指定しない</label></p>
+              <p class="charity_all"><label for="charity_icon1"><input type="radio" name="charity" id="charity_icon1" value="999">募金するすべての商品</label></p>
+              <p><label for="charity_icon2"><input type="radio" name="charity" id="charity_icon2" value="10"><span class="cic9">10％募金</span></label></p>
+              <p><label for="charity_icon3"><input type="radio" name="charity" id="charity_icon3" value="100"><span class="cic10">全額募金</span></label></p>
+            </div>
+          </fieldset>
+        </td>
+      </tr><!-- /.tr7 -->
+    </table>
 
-  <li><label for="other_cat1"><input type="radio" name="auccat" id="other_cat1" value="23336">コンピュータ</label></li>
-
-  <li><label for="other_cat2"><input type="radio" name="auccat" id="other_cat2" value="23632">家電、AV、カメラ</label></li>
-
-  <li><label for="other_cat3"><input type="radio" name="auccat" id="other_cat3" value="22152">音楽</label></li>
-
-  <li><label for="other_cat4"><input type="radio" name="auccat" id="other_cat4" value="21600">本、雑誌</label></li>
-
-  <li><label for="other_cat5"><input type="radio" name="auccat" id="other_cat5" value="21964">映画、ビデオ</label></li>
-
-  <li><label for="other_cat6"><input type="radio" name="auccat" id="other_cat6" value="25464">おもちゃ、ゲーム</label></li>
-
-  <li><label for="other_cat7"><input type="radio" name="auccat" id="other_cat7" value="24242">ホビー、カルチャー</label></li>
-
-  <li><label for="other_cat8"><input type="radio" name="auccat" id="other_cat8" value="20000">アンティーク、コレクション</label></li>
-
-  <li><label for="other_cat9"><input type="radio" name="auccat" id="other_cat9" value="24698">スポーツ、レジャー</label></li>
-
-  <li><label for="other_cat10"><input type="radio" name="auccat" id="other_cat10" value="26318">自動車、オートバイ</label></li>
-
-  <li><label for="other_cat11"><input type="radio" name="auccat" id="other_cat11" value="23000">ファッション</label></li>
-
-  <li><label for="other_cat12"><input type="radio" name="auccat" id="other_cat12" value="23140">アクセサリー、時計</label></li>
-
-  <li><label for="other_cat13"><input type="radio" name="auccat" id="other_cat13" value="42177">ビューティー、ヘルスケア</label></li>
-  </ul><ul>
-  <li><label for="other_cat14"><input type="radio" name="auccat" id="other_cat14" value="23976">食品、飲料</label></li>
-
-  <li><label for="other_cat15"><input type="radio" name="auccat" id="other_cat15" value="24198">住まい、インテリア</label></li>
-
-  <li><label for="other_cat16"><input type="radio" name="auccat" id="other_cat16" value="2084055844">ペット、生き物</label></li>
-
-  <li><label for="other_cat17"><input type="radio" name="auccat" id="other_cat17" value="22896">事務、店舗用品</label></li>
-
-  <li><label for="other_cat18"><input type="radio" name="auccat" id="other_cat18" value="26086">花、園芸</label></li>
-
-  <li><label for="other_cat19"><input type="radio" name="auccat" id="other_cat19" value="2084043920">チケット、金券、宿泊予約</label></li>
-
-  <li><label for="other_cat20"><input type="radio" name="auccat" id="other_cat20" value="24202">ベビー用品</label></li>
-
-  <li><label for="other_cat21"><input type="radio" name="auccat" id="other_cat21" value="2084032594">タレントグッズ</label></li>
-
-  <li><label for="other_cat22"><input type="radio" name="auccat" id="other_cat22" value="20060">コミック、アニメグッズ</label></li>
-
-  <li><label for="other_cat23"><input type="radio" name="auccat" id="other_cat23" value="2084060731">不動産</label></li>
-
-  <li><label for="other_cat24"><input type="radio" name="auccat" id="other_cat24" value="2084217893">チャリティー</label></li>
-
-  <li><label for="other_cat25"><input type="radio" name="auccat" id="other_cat25" value="26084">その他</label></li>
-
-  </ul>
-  </div>
-  </fieldset>
-  </td>
-  </tr><!-- /.tr1 -->
-
-  <!-- .tr2 -->
-  <tr class="tr2">
-  <th class="t2">現在価格</th>
-  <td class="a">
-  <fieldset>
-  <legend>現在価格</legend>
-  <input type="text" name="aucminprice" size="28" maxlength="10" value="" class="itx3" autocomplete="on"><span>円～</span>
-  <input type="text" name="aucmaxprice" size="28" maxlength="10" value="" class="itx3" autocomplete="on"><span>円</span>
-  </fieldset></td>
-  </tr><!-- /.tr2 -->
-
-  <!-- .tr2 -->
-  <tr class="tr2">
-  <th class="t2">即決価格</th>
-  <td class="a">
-  <fieldset>
-  <legend>即決価格</legend>
-  <input type="text" name="aucmin_bidorbuy_price" maxlength="10" size="28" value="" class="itx3" autocomplete="on"><span>円～</span>
-  <input type="text" name="aucmax_bidorbuy_price" maxlength="10" size="28" value="" class="itx3" autocomplete="on"><span>円</span>
-  </fieldset></td>
-  </tr><!-- /.tr2 -->
-  <!-- .tr3 -->
-  <tr class="tr3">
-  <th class="t2">出品地域</th>
-  <td class="a">
-  <fieldset id="loc">
-  <legend>出品地域</legend>
-  <div class="l"><label for="loc_cd0"><input name="l0" type="checkbox" id="loc_cd0" value="0" checked="checked">すべて</label></div>
-  <ul>
-  <li><label for="loc_cd1"><input type="checkbox" name="lc1" id="loc_cd1" value="1">北海道</label></li><li><label for="loc_cd2"><input type="checkbox" name="lc2" id="loc_cd2" value="2">青森県</label></li><li><label for="loc_cd3"><input type="checkbox" name="lc3" id="loc_cd3" value="3">岩手県</label></li><li><label for="loc_cd4"><input type="checkbox" name="lc4" id="loc_cd4" value="4">宮城県</label></li><li><label for="loc_cd5"><input type="checkbox" name="lc5" id="loc_cd5" value="5">秋田県</label></li><li><label for="loc_cd6"><input type="checkbox" name="lc6" id="loc_cd6" value="6">山形県</label></li><li><label for="loc_cd7"><input type="checkbox" name="lc7" id="loc_cd7" value="7">福島県</label></li><li><label for="loc_cd8"><input type="checkbox" name="lc8" id="loc_cd8" value="8">茨城県</label></li><li><label for="loc_cd9"><input type="checkbox" name="lc9" id="loc_cd9" value="9">栃木県</label></li><li><label for="loc_cd10"><input type="checkbox" name="lc10" id="loc_cd10" value="10">群馬県</label></li><li><label for="loc_cd11"><input type="checkbox" name="lc11" id="loc_cd11" value="11">埼玉県</label></li><li class="l"><label for="loc_cd12"><input type="checkbox" name="lc12" id="loc_cd12" value="12">千葉県</label></li></ul><ul><li><label for="loc_cd13"><input type="checkbox" name="lc13" id="loc_cd13" value="13">東京都</label></li><li><label for="loc_cd14"><input type="checkbox" name="lc14" id="loc_cd14" value="14">神奈川県</label></li><li><label for="loc_cd15"><input type="checkbox" name="lc15" id="loc_cd15" value="15">山梨県</label></li><li><label for="loc_cd16"><input type="checkbox" name="lc16" id="loc_cd16" value="16">長野県</label></li><li><label for="loc_cd17"><input type="checkbox" name="lc17" id="loc_cd17" value="17">新潟県</label></li><li><label for="loc_cd18"><input type="checkbox" name="lc18" id="loc_cd18" value="18">富山県</label></li><li><label for="loc_cd19"><input type="checkbox" name="lc19" id="loc_cd19" value="19">石川県</label></li><li><label for="loc_cd20"><input type="checkbox" name="lc20" id="loc_cd20" value="20">福井県</label></li><li><label for="loc_cd21"><input type="checkbox" name="lc21" id="loc_cd21" value="21">岐阜県</label></li><li><label for="loc_cd22"><input type="checkbox" name="lc22" id="loc_cd22" value="22">静岡県</label></li><li><label for="loc_cd23"><input type="checkbox" name="lc23" id="loc_cd23" value="23">愛知県</label></li><li class="l"><label for="loc_cd24"><input type="checkbox" name="lc24" id="loc_cd24" value="24">三重県</label></li></ul><ul><li><label for="loc_cd25"><input type="checkbox" name="lc25" id="loc_cd25" value="25">滋賀県</label></li><li><label for="loc_cd26"><input type="checkbox" name="lc26" id="loc_cd26" value="26">京都府</label></li><li><label for="loc_cd27"><input type="checkbox" name="lc27" id="loc_cd27" value="27">大阪府</label></li><li><label for="loc_cd28"><input type="checkbox" name="lc28" id="loc_cd28" value="28">兵庫県</label></li><li><label for="loc_cd29"><input type="checkbox" name="lc29" id="loc_cd29" value="29">奈良県</label></li><li><label for="loc_cd30"><input type="checkbox" name="lc30" id="loc_cd30" value="30">和歌山県</label></li><li><label for="loc_cd31"><input type="checkbox" name="lc31" id="loc_cd31" value="31">鳥取県</label></li><li><label for="loc_cd32"><input type="checkbox" name="lc32" id="loc_cd32" value="32">島根県</label></li><li><label for="loc_cd33"><input type="checkbox" name="lc33" id="loc_cd33" value="33">岡山県</label></li><li><label for="loc_cd34"><input type="checkbox" name="lc34" id="loc_cd34" value="34">広島県</label></li><li><label for="loc_cd35"><input type="checkbox" name="lc35" id="loc_cd35" value="35">山口県</label></li><li class="l"><label for="loc_cd36"><input type="checkbox" name="lc36" id="loc_cd36" value="36">徳島県</label></li></ul><ul><li><label for="loc_cd37"><input type="checkbox" name="lc37" id="loc_cd37" value="37">香川県</label></li><li><label for="loc_cd38"><input type="checkbox" name="lc38" id="loc_cd38" value="38">愛媛県</label></li><li><label for="loc_cd39"><input type="checkbox" name="lc39" id="loc_cd39" value="39">高知県</label></li><li><label for="loc_cd40"><input type="checkbox" name="lc40" id="loc_cd40" value="40">福岡県</label></li><li><label for="loc_cd41"><input type="checkbox" name="lc41" id="loc_cd41" value="41">佐賀県</label></li><li><label for="loc_cd42"><input type="checkbox" name="lc42" id="loc_cd42" value="42">長崎県</label></li><li><label for="loc_cd43"><input type="checkbox" name="lc43" id="loc_cd43" value="43">熊本県</label></li><li><label for="loc_cd44"><input type="checkbox" name="lc44" id="loc_cd44" value="44">大分県</label></li><li><label for="loc_cd45"><input type="checkbox" name="lc45" id="loc_cd45" value="45">宮崎県</label></li><li><label for="loc_cd46"><input type="checkbox" name="lc46" id="loc_cd46" value="46">鹿児島県</label></li><li><label for="loc_cd47"><input type="checkbox" name="lc47" id="loc_cd47" value="47">沖縄県</label></li><li class="l"><label for="loc_cd48"><input type="checkbox" name="lc48" id="loc_cd48" value="48">海外</label></li></ul><ul></ul>
-  </fieldset></td>
-  </tr><!-- /.tr3 -->
-  <!-- .tr4 -->
-  <tr class="tr4">
-  <th class="t2">出品者</th>
-  <td class="a">
-  <fieldset>
-  <legend>出品者</legend>
-  <p><label for="abatch0"><input type="radio" name="abatch" id="abatch0" value="0" checked>すべて</label></p>
-  <p><label for="abatch1"><input type="radio" name="abatch" id="abatch1" value="1">ストア</label></p>
-  <p><label for="abatch2"><input type="radio" name="abatch" id="abatch2" value="2">個人</label></p>
-  </fieldset></td>
-  </tr><!-- /.tr4 -->
-  <!-- .tr4 -->
-  <tr class="tr4">
-  <th class="t2">商品の状態</th>
-  <td class="a">
-  <fieldset>
-  <legend>商品の状態</legend>
-  <p><label for="istatus0"><input type="radio" name="istatus" id="istatus0" value="0" checked>すべて</label></p>
-  <p><label for="istatus1"><input type="radio" name="istatus" id="istatus1" value="1">新品</label></p>
-  <p><label for="istatus2"><input type="radio" name="istatus" id="istatus2" value="2">中古</label></p>
-  </fieldset></td>
-  </tr><!-- /.tr4 -->
-
-  <!-- .tr5 -->
-  <tr class="tr5 ASic">
-  <th class="t2">オプション</th>
-  <td class="a">
-
-  <fieldset>
-  <legend>オプション</legend>
-  <div>
-  <p><label for="jpypayment"><input type="checkbox" name="jpypayment" id="jpypayment" value="1"><span class="pic2">かんたん決済</span>かんたん決済</label></p>
-  <p><label for="point"><input type="checkbox" name="point" id="point" value="1"><span class="pic3-v2">Ｔポイント</span>Ｔポイント</label></p>
-  <p><label for="new"><input type="checkbox" name="new" id="new" value="1"><span class="sic1">NEW</span>新着</label></p>
-  <p><label for="pstagefree"><input type="checkbox" name="pstagefree" id="pstagefree" value="1"><span class="pic4">送料無料</span></label></p>
-  <p><label for="offer"><input type="checkbox" name="offer" id="offer" value="1">値下げ交渉</label></p>
-  <p><label for="thumb"><input type="checkbox" name="thumb" id="thumb" value="1"><span class="sic5">画像あり</span>画像あり</label></p>
-  <p><label for="wrappingicon"><input type="checkbox" name="wrappingicon" id="wrappingicon" value="1"><span class="sic6">贈答品</span>贈答品</label></p>
-  <p class="convenience"><label for="shipping"><input type="checkbox" name="shipping" id="shipping" value="111">コンビニ受取<span>（ファミリーマート）</span>
-  </div>
-  </fieldset>
-
-  </td>
-  </tr><!-- /.tr5 -->
-  <!-- .tr6 -->
-  <tr class="tr6 ASic">
-  <th class="t2">目立ちアイコン</th>
-  <td class="a">
-  <fieldset>
-  <legend>目立ちアイコン</legend>
-  <div class="cf">
-  <p><label for="gift_icon0"><input type="radio" name="gift_icon" id="gift_icon0" value="0" checked="checked">指定しない</label></p>
-  <p><label for="gift_icon1"><input type="radio" name="gift_icon" id="gift_icon1" value="2"><span class="cic2">美品</span></label></p>
-  <p><label for="gift_icon2"><input type="radio" name="gift_icon" id="gift_icon2" value="3"><span class="cic3">非売品</span></label></p>
-  <p><label for="gift_icon3"><input type="radio" name="gift_icon" id="gift_icon3" value="4"><span class="cic4">限定品</span></label></p>
-  </div>
-  <div class="l cf">
-  <p><label for="gift_icon4"><input type="radio" name="gift_icon" id="gift_icon4" value="5"><span class="cic5">保証書付</span></label></p>
-  <p><label for="gift_icon5"><input type="radio" name="gift_icon" id="gift_icon5" value="6"><span class="cic6">全巻セット</span></label></p>
-  <p><label for="gift_icon6"><input type="radio" name="gift_icon" id="gift_icon6" value="7"><span class="cic7">正規店購入</span></label></p>
-  <p><label for="gift_icon7"><input type="radio" name="gift_icon" id="gift_icon7" value="8"><span class="cic8">産地直送</span></label></p>
-  </div>
-  </fieldset>
-  </td>
-  </tr><!-- /.tr6 -->
-  <!-- .tr7 -->
-  <tr class="tr7 ASic">
-  <th class="t2">みんなのチャリティー</th>
-  <td class="a">
-  <fieldset>
-  <legend>みんなのチャリティー</legend>
-  <div class="cf">
-  <p><label for="charity_icon0"><input type="radio" name="charity" id="charity_icon0" value="" checked="checked">指定しない</label></p>
-  <p class="charity_all"><label for="charity_icon1"><input type="radio" name="charity" id="charity_icon1" value="999">募金するすべての商品</label></p>
-  <p><label for="charity_icon2"><input type="radio" name="charity" id="charity_icon2" value="10"><span class="cic9">10％募金</span></label></p>
-  <p><label for="charity_icon3"><input type="radio" name="charity" id="charity_icon3" value="100"><span class="cic10">全額募金</span></label></p>
-  </div>
-  </fieldset>
-  </td>
-  </tr><!-- /.tr7 -->
-
-  </table>
-  <div class="sb cf">
-
-  <input type="submit" value="設定" class="btn btn-success" id="btn">
-  <br>
-  <br>
-  <br>
-  </div>
-
-  <input type="hidden" name="ei" value="UTF-8">
-
-  <input type="hidden" name="tab_ex" value="commerce">
-
-  <input type="hidden" name="slider" value="0">
-
-  <input type="hidden" name="f_adv" value="1">
-  <input type="hidden" name="fr" value="auc_adv">
+    <div class="sb cf">
+      <input type="submit" value="設定" class="btn btn-success" id="btn">
+    </div>
+    <input type="hidden" name="ei" value="UTF-8">
+    <input type="hidden" name="tab_ex" value="commerce">
+    <input type="hidden" name="slider" value="0">
+    <input type="hidden" name="f_adv" value="1">
+    <input type="hidden" name="fr" value="auc_adv">
+    <input name="authenticity_token" type="hidden" value=<%= form_authenticity_token %>/>
   </form>
-
 </div>
