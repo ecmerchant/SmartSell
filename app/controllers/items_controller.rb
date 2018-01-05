@@ -420,11 +420,23 @@ class ItemsController < ApplicationController
     furl = body[:url]
 
     if furl != nil && furl != "" then
-      charset = nil
-      html = open(furl) do |f|
-        charset = f.charset # 文字種別を取得
-        f.read # htmlを読み込んで変数htmlに渡す
+
+      ua = CSV.read('app/others/User-Agent.csv', headers: false, col_sep: "\t")
+      uanum = ua.length
+      user_agent = ua[rand(uanum)][0]
+      logger.debug("\n\nagent is ")
+      logger.debug(user_agent)
+      begin
+        html = open(furl, "User-Agent" => user_agent) do |f|
+          charset = f.charset
+          f.read # htmlを読み込んで変数htmlに渡す
+        end
+      rescue OpenURI::HTTPError => error
+        response = error.io
+        logger.debug("error!!\n")
+        logger.debug(error)
       end
+
       doc = Nokogiri::HTML.parse(html, nil, charset)
 
       title = doc.xpath('//h1[@class="ProductTitle__text"]')[0].inner_text
@@ -518,10 +530,22 @@ class ItemsController < ApplicationController
 
     #終了したオークションへのアクセス
     charset = nil
-    html = open(eurl) do |f|
-      charset = f.charset # 文字種別を取得
-      f.read # htmlを読み込んで変数htmlに渡す
+    ua = CSV.read('app/others/User-Agent.csv', headers: false, col_sep: "\t")
+    uanum = ua.length
+    user_agent = ua[rand(uanum)][0]
+    logger.debug("\n\nagent is ")
+    logger.debug(user_agent)
+    begin
+      html = open(eurl, "User-Agent" => user_agent) do |f|
+        charset = f.charset
+        f.read # htmlを読み込んで変数htmlに渡す
+      end
+    rescue OpenURI::HTTPError => error
+      response = error.io
+      logger.debug("error!!\n")
+      logger.debug(error)
     end
+
     doc = Nokogiri::HTML.parse(html, nil, charset)
 
     temp = doc.xpath('//span[@class="ePrice"]')
@@ -548,9 +572,20 @@ class ItemsController < ApplicationController
 
     #開催中オークションへのアクセス
     charset = nil
-    html = open(surl) do |f|
-      charset = f.charset # 文字種別を取得
-      f.read # htmlを読み込んで変数htmlに渡す
+    ua = CSV.read('app/others/User-Agent.csv', headers: false, col_sep: "\t")
+    uanum = ua.length
+    user_agent = ua[rand(uanum)][0]
+    logger.debug("\n\nagent is ")
+    logger.debug(user_agent)
+    begin
+      html = open(surl, "User-Agent" => user_agent) do |f|
+        charset = f.charset
+        f.read # htmlを読み込んで変数htmlに渡す
+      end
+    rescue OpenURI::HTTPError => error
+      response = error.io
+      logger.debug("error!!\n")
+      logger.debug(error)
     end
     doc = Nokogiri::HTML.parse(html, nil, charset)
 
@@ -609,10 +644,22 @@ class ItemsController < ApplicationController
     if furl != nil && furl != "" then
 
       charset = nil
-      html = open(furl) do |f|
-        charset = f.charset # 文字種別を取得
-        f.read # htmlを読み込んで変数htmlに渡す
+      ua = CSV.read('app/others/User-Agent.csv', headers: false, col_sep: "\t")
+      uanum = ua.length
+      user_agent = ua[rand(uanum)][0]
+      logger.debug("\n\nagent is ")
+      logger.debug(user_agent)
+      begin
+        html = open(furl, "User-Agent" => user_agent) do |f|
+          charset = f.charset
+          f.read # htmlを読み込んで変数htmlに渡す
+        end
+      rescue OpenURI::HTTPError => error
+        response = error.io
+        logger.debug("error!!\n")
+        logger.debug(error)
       end
+
       doc = Nokogiri::HTML.parse(html, nil, charset)
 
       temp = doc.xpath('//ul[@class="ProductImage__images"]')[0]
