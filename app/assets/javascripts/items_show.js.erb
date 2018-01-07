@@ -194,7 +194,7 @@ function ConnectYahoo(rownum){
   var orgData = handsontable.getData();
   var qtype = document.getElementById("qtype").value;
   var query = {title: orgData[rownum][8], mpn: orgData[rownum][12], qtype: qtype};
-  
+
   var myData = {data: query};
 
   if(document.getElementById("progress").value == "cancel"){
@@ -556,7 +556,7 @@ $("#setcsv").click(function () {
 $("#output").click(function () {
   var tempData = handsontable_csv.getData();
   var csvdata = "";
-  alert(tempData);
+
   for(var k = 0; k < tempData.length; k++){
     csvdata = csvdata + tempData[k].join("\t") + "\n";
   }
