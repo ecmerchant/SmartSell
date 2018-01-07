@@ -634,7 +634,7 @@ class ItemsController < ApplicationController
       else
         bPrice = 0
       end
-      aucid = furl[furl.index("auction/")+8..-1]
+      aucid = ""
     else
       furl = ""
       title = "該当なし"
@@ -678,7 +678,7 @@ class ItemsController < ApplicationController
         b += 1
       end
       furl = '<a href="' + furl + '" target="_blank">' + furl + '</a>'
-
+      aucid = doc.xpath('//dd[@class="ProductDetail__description"]/text()')[10].inner_text
       seller = doc.xpath('//span[@class="Seller__name"]/a')[0].inner_text
       pfb = doc.xpath('//span[@class="Seller__ratingGood"]')[0].inner_text
       nfb = doc.xpath('//span[@class="Seller__ratingBad"]')[0].inner_text
