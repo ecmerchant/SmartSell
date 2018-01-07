@@ -1,8 +1,8 @@
 <div class="container">
   <div class="bg-success" style="align-items: center;">
-    <h1 style="padding: 10px;">Smart Sell&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small>product by <a href="http://ec-merchant.com" target="_blank">ec-merchant.com</a></small></h1>
+    <h1 style="padding: 10px;">Smart Sell&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h1>
   </div>
-  <h4>ログイン中：<%= @user %>&nbsp;&nbsp;&nbsp;&nbsp;<%= link_to "MWSアカウントの設定", {:controller => "items", :action => "regist"}, {:target => "_blank"} %>&nbsp;&nbsp;&nbsp;&nbsp;<%= link_to "ヤフオク設定", {:controller => "items", :action => "setup"}, {:target => "_blank"} %></h4>
+  <h4>ログイン中：<%= @user %>&nbsp;&nbsp;&nbsp;&nbsp;<%= link_to "MWSアカウントの設定", {:controller => "items", :action => "regist"}, {:target => "_blank"} %>&nbsp;&nbsp;&nbsp;&nbsp;<%= link_to "ヤフオク設定", {:controller => "items", :action => "setup"}, {:target => "_blank"} %>&nbsp;&nbsp;&nbsp;<%= link_to 'ログアウト', destroy_user_session_path, method: :get %>&nbsp;&nbsp;&nbsp;<%= link_to '管理者専用', rails_admin_path, method: :get %></h4>
 
   <ul class="nav nav-tabs" role="tablist">
     <li class="active" role="presentation">
@@ -25,13 +25,21 @@
         </div>
         &nbsp;&nbsp;
         <div class="form-group">
-          <label for="input_url">アマゾンURLの入力</label>
+          <label for="input_url">アマゾンURL</label>
           <input type="text" id="input_url" class="form-control" placeholder="Input Amazon URL Here .." >
         </div>
         <div class="form-group">
           <button id="submit_url" class="btn btn-success" type="button" style="width: 120px;">アマゾン取得</button>
         </div>
         &nbsp;
+
+        <div class="form-group">
+          <select class="form-control" id="qtype" name="number">
+            <option value="1" selected="selected">型番</option>
+            <option value="2" >商品名</option>
+          </select>
+        </div>
+
         <div class="form-group">
           <button id="connet_yahoo" class="btn btn-success" type="button" style="width: 120px;">ヤフオク取得</button>
         </div>
@@ -43,6 +51,7 @@
         <div class="form-group">
           <button id="setcsv" class="btn btn-success" type="button" style="width: 100px;">CSV作成</button>
         </div>
+        &nbsp;
         <div class="form-group">
           <button id="hide" class="btn btn-success" type="button" style="width: 80px;">非表示</button>
         </div>

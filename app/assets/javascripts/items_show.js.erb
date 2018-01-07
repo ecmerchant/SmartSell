@@ -192,7 +192,9 @@ function ConnectYahoo(rownum){
 
   var sr = rownum;
   var orgData = handsontable.getData();
-  var query = {title: orgData[rownum][8], mpn: orgData[rownum][12]};
+  var qtype = document.getElementById("qtype").value;
+  var query = {title: orgData[rownum][8], mpn: orgData[rownum][12], qtype: qtype};
+
   var myData = {data: query};
 
   if(document.getElementById("progress").value == "cancel"){
@@ -214,7 +216,7 @@ function ConnectYahoo(rownum){
 
       var amafee = rData[rownum][13];
       var sprice = usedprice - 10;
-      var bp = resData[10];
+      var bp = resData[10];　//仕入価格は即決価格を優先
       if(bp == 0){
         bp = resData[9];
       }
@@ -223,8 +225,8 @@ function ConnectYahoo(rownum){
       for(var j = 1; j < resData.length; j++){
         nData[j] = [rownum,14+j,resData[j]];
       }
-
-      if(sprice < 0 || bp == 0 || usedprice > newprice || sprice < resData[2] || sprice < resData[3]){
+      //販売不可商品の条件：販売価格がマイナス、仕入価格が0、アマゾンの中古価格＞新品価格、
+      if(sprice < 0 || bp == 0 || usedprice > newprice ){
         sprice = 0;
         profit = 0;
       }

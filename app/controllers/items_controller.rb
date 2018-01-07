@@ -426,6 +426,8 @@ class ItemsController < ApplicationController
       user_agent = ua[rand(uanum)][0]
       logger.debug("\n\nagent is ")
       logger.debug(user_agent)
+      logger.debug(furl)
+      charset = nil
       begin
         html = open(furl, "User-Agent" => user_agent) do |f|
           charset = f.charset
@@ -510,12 +512,17 @@ class ItemsController < ApplicationController
     body = params[:data]
     title = body[:title]
     mpn = body[:mpn]
+    qtype = body[:qtype]
 
     cuser = current_user.email
     account = Rule.find_by(user:cuser)
-
-    keyword = mpn
-
+    logger.debug("query target is ")
+    logger.debug(qtype)
+    if qtype == "1" then
+      keyword = mpn
+    else
+      keyword = title
+    end
     enc_keyword = URI.escape(keyword)
 
     if account != nil then
