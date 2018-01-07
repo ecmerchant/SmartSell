@@ -194,7 +194,7 @@ function ConnectYahoo(rownum){
   var orgData = handsontable.getData();
   var qtype = document.getElementById("qtype").value;
   var query = {title: orgData[rownum][8], mpn: orgData[rownum][12], qtype: qtype};
-
+  alert(qtype);
   var myData = {data: query};
 
   if(document.getElementById("progress").value == "cancel"){
