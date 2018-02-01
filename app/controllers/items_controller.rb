@@ -24,6 +24,10 @@ class ItemsController < ApplicationController
     else
       gon.list = false
     end
+
+    gon.regasin = Asin.where(user:current_user.email).pluck("rasin")
+    gon.ngasin = Asin.where(user:current_user.email).pluck("nasin")
+
   end
 
   def regist
@@ -720,6 +724,58 @@ class ItemsController < ApplicationController
     render json:result
   end
 
+  def mount
+    if request.post? then
+      cuser = current_user.email
+      res = params[:data]
+      regasin = JSON.parse(res[:regasin])
+      ngasin = JSON.parse(res[:ngasin])
+      logger.debug("=======================")
+      logger.debug(regasin[2])
+      list = Asin.where(user:cuser)
+      if list != nil then
+        for j in 0..regasin.length-1
+          reglist = list.find_by(rasin: regasin[j][0])
+          if reglist == nil then
+            Asin.create(
+              user: cuser,
+              rasin: regasin[j][0]
+            )
+          end
+        end
+
+        for j in 0..ngasin.length-1
+          nglist = list.find_by(nasin: ngasin[j][0])
+          if nglist == nil then
+            Asin.create(
+              user: cuser,
+              nasin: ngasin[j][0]
+            )
+          end
+        end
+
+      else
+        for j in 0..regasin.length-1
+          Asin.create(
+            user: cuser,
+            rasin: regasin[j][0]
+          )
+        end
+
+        for j in 0..ngasin.length-1
+
+          Asin.create(
+            user: cuser,
+            nasin: ngasin[j][0]
+          )
+
+        end
+
+
+      end
+    end
+    redirect_to items_show_path
+  end
 
   def setup
 

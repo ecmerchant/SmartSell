@@ -14,6 +14,9 @@
     <li role="presentation">
       <a aria-controls="tab_c" data-toggle="tab" href="#tab_c" role="tab">3.出品情報の設定</a>
     </li>
+    <li role="presentation">
+      <a aria-controls="tab_d" data-toggle="tab" href="#tab_d" role="tab">4.ASINの登録</a>
+    </li>
   </ul>
   <br>
   <div class="tab-content">
@@ -78,6 +81,26 @@
       <button id="fixed_save" class="btn btn-success" type="button" style="width: 140px;">CSV設定保存</button>
       <br><br>
       <div id="fixed_csv"></div>
+    </div>
+
+    <div class="tab-pane" id="tab_d" role="tabpanel">
+      <div class="row">
+        <div class="col-sm-12">
+          <p>ASIN設定の保存</p>
+          <button id="set_asin_btn" class="btn btn-success" type="button" style="width: 140px;">設定保存</button>
+        </div>
+        <div class="col-sm-12">
+          <br>
+        </div>
+        <div class="col-sm-4">
+          <p>情報取得したいASINを入力</p>
+          <div id="set_asin"></div>
+        </div>
+        <div class="col-sm-6">
+          <p>除外したいASINを入力</p>
+          <div id="ng_asin"></div>
+        </div>
+      </div>
     </div>
 
   </div>

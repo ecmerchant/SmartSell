@@ -74,3 +74,7 @@ gem 'devise-bootstrap-views'
 gem 'bootstrap-sass' , '~> 3.3.6'
 gem 'rails_12factor'
 gem 'jquery-turbolinks'
+
+# for job with Resque
+gem 'redis-rails'
+gem 'resque'
