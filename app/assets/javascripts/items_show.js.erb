@@ -620,16 +620,30 @@ var ng_asin_list = [];
 var ra = gon.regasin;
 var na = gon.ngasin;
 
-for(var x = 0; x < ra.length; x++){
-  asin_list[x] = [];
-  asin_list[x][0] = ra[x];
+if(ra != ""){
+  for(var x = 0; x < ra.length; x++){
+    asin_list[x] = [];
+    asin_list[x][0] = ra[x];
+  }
+}else{
+  for(var x = 0; x < 20; x++){
+    asin_list[x] = [];
+    asin_list[x][0] = "";
+  }
 }
 
-
-for(var x = 0; x < na.length; x++){
-  ng_asin_list[x] = [];
-  ng_asin_list[x][0] = na[x];
+if(na != ""){
+  for(var x = 0; x < na.length; x++){
+    ng_asin_list[x] = [];
+    ng_asin_list[x][0] = na[x];
+  }
+}else{
+  for(var x = 0; x < 20; x++){
+    ng_asin_list[x] = [];
+    ng_asin_list[x][0] = "";
+  }
 }
+
 
 var container_asin = document.getElementById('set_asin');
 var handsontable_asin = new Handsontable(container_asin, {
@@ -669,7 +683,7 @@ var handsontable_ng_asin = new Handsontable(container_ng_asin, {
 
 $("#set_asin_btn").click(function () {
   var tempData_asin1 = handsontable_asin.getData();
-  var tempData_asin2 = handsontable_asin.getData();
+  var tempData_asin2 = handsontable_ng_asin.getData();
 
   for(var k = 0; k < tempData_asin1.length; k++){
     if(tempData_asin1[k][0] == ""){

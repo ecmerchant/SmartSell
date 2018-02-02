@@ -25,8 +25,30 @@ class ItemsController < ApplicationController
       gon.list = false
     end
 
-    gon.regasin = Asin.where(user:current_user.email).pluck("rasin")
-    gon.ngasin = Asin.where(user:current_user.email).pluck("nasin")
+    rt = Asin.where(user:current_user.email).pluck("rasin")
+    nrt = []
+    k = 0
+    for p in 0..rt.length - 1
+      if rt[p] != nil then
+        nrt[k]=[]
+        nrt[k][0] = rt[p]
+         k += 1
+      end
+    end
+
+    qt = Asin.where(user:current_user.email).pluck("nasin")
+    nqt = []
+    k = 0
+    for p in 0..qt.length - 1
+      if qt[p] != nil then
+        nqt[k]=[]
+        nqt[k][0] = qt[p]
+        k += 1
+      end
+    end
+
+    gon.regasin = nrt
+    gon.ngasin = nqt
 
   end
 
@@ -731,7 +753,11 @@ class ItemsController < ApplicationController
       regasin = JSON.parse(res[:regasin])
       ngasin = JSON.parse(res[:ngasin])
       logger.debug("=======================")
-      logger.debug(regasin[2])
+      logger.debug(regasin)
+      logger.debug("=======================")
+      logger.debug(ngasin)
+      logger.debug("=======================")
+
       list = Asin.where(user:cuser)
       if list != nil then
         for j in 0..regasin.length-1
