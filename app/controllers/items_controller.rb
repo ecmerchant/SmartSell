@@ -28,18 +28,18 @@ class ItemsController < ApplicationController
     rt = Asin.where(user:current_user.email).pluck("rasin")
     nrt = []
     k = 0
-    for p in 0..rt.length - 1
+    for p in 0..rt.length
       if rt[p] != nil then
         nrt[k]=[]
         nrt[k][0] = rt[p]
-         k += 1
+        k += 1
       end
     end
 
     qt = Asin.where(user:current_user.email).pluck("nasin")
     nqt = []
     k = 0
-    for p in 0..qt.length - 1
+    for p in 0..qt.length
       if qt[p] != nil then
         nqt[k]=[]
         nqt[k][0] = qt[p]
@@ -99,48 +99,71 @@ class ItemsController < ApplicationController
 
     body = params[:data]
     body = JSON.parse(body)
+
     org_url = body[0]
     pgnum = body[1]
     maxnum = body[2]
     cnum = body[3]
+    input_type = body[4].to_i
+    reg_asin = body[5]
+    ng_asin = body[6]
 
     user = current_user.email
 
-    j = 0
-    data = []
-    charset = nil
+    if input_type == 1 then
+      logger.debug("Case URL")
+      j = 0
+      data = []
+      charset = nil
 
-    url = org_url + '&page=' + pgnum.to_s
-    user_agent = "Mozilla/5.0 (Windows NT 6.1; rv:28.0) Gecko/20100101 Firefox/28.0"
+      url = org_url + '&page=' + pgnum.to_s
+      user_agent = "Mozilla/5.0 (Windows NT 6.1; rv:28.0) Gecko/20100101 Firefox/28.0"
 
-    begin
-      html = open(url, "User-Agent" => user_agent) do |f|
-        charset = f.charset
-        f.read # htmlを読み込んで変数htmlに渡す
+      begin
+        html = open(url, "User-Agent" => user_agent) do |f|
+          charset = f.charset
+          f.read # htmlを読み込んで変数htmlに渡す
+        end
+      rescue OpenURI::HTTPError => error
+        response = error.io
+        logger.debug("\nNo." + pgnum.to_s + "\n")
+        logger.debug("error!!\n")
+        logger.debug(error)
       end
-    rescue OpenURI::HTTPError => error
-      response = error.io
-      logger.debug("\nNo." + pgnum.to_s + "\n")
-      logger.debug("error!!\n")
-      logger.debug(error)
-    end
 
-    doc = Nokogiri::HTML.parse(html, charset)
-    doc.css('li/@data-asin').each do |list|
-      cnum += 1
+      doc = Nokogiri::HTML.parse(html, charset)
+      doc.css('li/@data-asin').each do |list|
+        cnum += 1
 
-      if cnum > maxnum then
-        break;
+        if cnum > maxnum then
+          break
+        end
+        check = "a-popover-sponsored-header-" + list.value
+        if doc.xpath('//div[@id=' + check + ']')[0] == nil then
+          if ng_asin.flatten.include?(list.value) == false then
+            data[j] = []
+            for x in 0..28
+              data[j][x] = ""
+            end
+            data[j][0] = false
+            data[j][1] = false
+            data[j][9] = list.value
+            data[j][14] = "⇒"
+            j += 1
+          end
+        end
       end
-      check = "a-popover-sponsored-header-" + list.value
-      if doc.xpath('//div[@id=' + check + ']')[0] == nil then
+    else
+      j = 0
+      data = []
+      for j in 0..reg_asin.length - 1
         data[j] = []
         for x in 0..28
           data[j][x] = ""
         end
         data[j][0] = false
         data[j][1] = false
-        data[j][9] = list.value
+        data[j][9] = reg_asin[j][0]
         data[j][14] = "⇒"
         j += 1
       end
@@ -163,9 +186,9 @@ class ItemsController < ApplicationController
       aws_secret_access_key: skey
     )
 
-    aaws = "AKIAJWYZXQ57QND7DNEA"
-    akey = "iNDLIrTVK84d/qxVHAWfra97nfV9eOMLaYOBMexf"
-    aid = "mamegomari-22"
+    aaws = "AKIAJXEG3LEGXBVPYUAA"
+    akey = "jHAewcR7wGDmr6sEmHfQNYD6z4WCWfvJUACAMy7M"
+    aid = "mamegomari10e-22"
 
     Amazon::Ecs.configure do |options|
       options[:AWS_access_key_id] = aaws
@@ -200,7 +223,7 @@ class ItemsController < ApplicationController
       requests[i] = request
 
       i += 1
-
+      logger.debug(i)
       if i == 10 then
         parser = client.get_lowest_offer_listings_for_asin(asin,{item_condition: 'Used'})
         doc = Nokogiri::XML(parser.body)
@@ -216,9 +239,9 @@ class ItemsController < ApplicationController
         times = 5
         begin
           aws = Amazon::Ecs.item_lookup(key, {:response_group => 'Large,OfferFull',:country => 'jp'})
-          try += 1
         rescue
           sleep(1)
+          try += 1
           retry if try < times
         end
 
@@ -284,6 +307,7 @@ class ItemsController < ApplicationController
       end
     end
 
+
     if i > 0  then
       logger.debug("key=" + key)
       parser = client.get_lowest_offer_listings_for_asin(asin,{item_condition: 'Used'})
@@ -324,9 +348,9 @@ class ItemsController < ApplicationController
       times = 5
       begin
         aws = Amazon::Ecs.item_lookup(key, {:response_group => 'Large,OfferFull',:country => 'jp'})
-        try += 1
       rescue
         sleep(1)
+        try += 1
         retry if try < times
       end
 
@@ -752,15 +776,10 @@ class ItemsController < ApplicationController
       res = params[:data]
       regasin = JSON.parse(res[:regasin])
       ngasin = JSON.parse(res[:ngasin])
-      logger.debug("=======================")
-      logger.debug(regasin)
-      logger.debug("=======================")
-      logger.debug(ngasin)
-      logger.debug("=======================")
 
       list = Asin.where(user:cuser)
       if list != nil then
-        for j in 0..regasin.length-1
+        for j in 0..regasin.length - 1
           reglist = list.find_by(rasin: regasin[j][0])
           if reglist == nil then
             Asin.create(
@@ -770,7 +789,7 @@ class ItemsController < ApplicationController
           end
         end
 
-        for j in 0..ngasin.length-1
+        for j in 0..ngasin.length - 1
           nglist = list.find_by(nasin: ngasin[j][0])
           if nglist == nil then
             Asin.create(
@@ -781,26 +800,21 @@ class ItemsController < ApplicationController
         end
 
       else
-        for j in 0..regasin.length-1
+        for j in 0..regasin.length - 1
           Asin.create(
             user: cuser,
             rasin: regasin[j][0]
           )
         end
-
-        for j in 0..ngasin.length-1
-
+        for j in 0..ngasin.length - 1
           Asin.create(
             user: cuser,
             nasin: ngasin[j][0]
           )
-
         end
-
-
       end
     end
-    redirect_to items_show_path
+    render
   end
 
   def setup
@@ -824,8 +838,6 @@ class ItemsController < ApplicationController
           url: surl
         )
       end
-
-
     end
   end
 
@@ -848,6 +860,13 @@ class ItemsController < ApplicationController
         )
       end
     end
+  end
+
+  def clear
+    if request.post? then
+      target = Asin.all.delete_all
+    end
+    redirect_to '/items/show#tab_d'
   end
 
   private def CCur(value)

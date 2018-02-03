@@ -12,6 +12,8 @@ Rails.application.routes.draw do
 
   post 'items/upload'
 
+  post 'items/clear'
+
   post 'items/mount'
 
   post 'items/connect'

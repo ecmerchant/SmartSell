@@ -1,6 +1,5 @@
 // create table for ASIN
 
-
 var maxRownum = 9600;
 var mydata = [];
 var colOption = [];
@@ -93,17 +92,31 @@ $("#submit_url").click(function () {
 function repajax(url,pgnum,cnum){
 
   var maxnum = document.getElementById("maxnumber").value
+  var itype = document.getElementById("input_type").value
   if(maxnum == ""){
     maxnum = 9600;
   }
   maxnum = Number(maxnum);
+
+  var tempData_asin1 = handsontable_asin.getData();
+  var tempData_asin2 = handsontable_ng_asin.getData();
+  tempData_asin1 = Array.prototype.concat.apply([],tempData_asin1);
+  tempData_asin2 = Array.prototype.concat.apply([],tempData_asin2);
+  if(itype == "2"){
+    maxnum = Number(tempData_asin1.length);
+  }
+
   var body = [];
   body[0] = url;
   body[1] = pgnum;
   body[2] = maxnum;
   body[3] = cnum;
+  body[4] = itype;
+  body[5] = tempData_asin1;
+  body[6] = tempData_asin2;
 
   body = JSON.stringify(body);
+
   myData = {data: body};
 
   if(document.getElementById("progress").value == "cancel"){
