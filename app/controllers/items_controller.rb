@@ -381,13 +381,13 @@ class ItemsController < ApplicationController
 
     logger.debug("Feed Content is \n\n")
     logger.debug(new_body)
-=begin
+
     feed_type = "_POST_FLAT_FILE_LISTINGS_DATA_"
     parser = client.submit_feed(new_body, feed_type)
     doc = Nokogiri::XML(parser.body)
 
     submissionId = doc.xpath(".//mws:FeedSubmissionId", {"mws"=>"http://mws.amazonaws.com/doc/2009-01-01/"}).text
-
+=begin
     process = ""
     err = 0
     while process != "_DONE_" do
