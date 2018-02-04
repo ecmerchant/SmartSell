@@ -52,6 +52,7 @@ class ItemsController < ApplicationController
 
   end
 
+
   def regist
     current_email = current_user.email
     @user = current_email
@@ -59,9 +60,8 @@ class ItemsController < ApplicationController
       @account = Mws.new
       data = params[:MWS]
       logger.debug("\n\nDebug")
-      logger.debug(data)
       user = Mws.find_by(User: current_email)
-      if data[:AWSkey] != nil && data[:Skey] != nil && data[:SellerId] != nil then
+      if data[:AWSkey] != nil && data[:SellerId] != nil then
         if user == nil then
           Mws.create(
             User: current_user.email,
@@ -69,15 +69,24 @@ class ItemsController < ApplicationController
             Skey: data[:Skey],
             SellerId:data[:SellerId]
           )
+          @res1 = data[:AWSkey]
+          @res2 = data[:Skey]
+          @res3 = data[:SellerId]
         else
-          user.AWSkey = data[:AWSkey]
-          user.Skey = data[:Skey]
-          user.SellerId = data[:SellerId]
-          user.save
+          Mws.update(
+            User: current_user.email,
+            AWSkey: data[:AWSkey],
+            Skey: data[:Skey],
+            SellerId: data[:SellerId]
+          )
           @res1 = data[:AWSkey]
           @res2 = data[:Skey]
           @res3 = data[:SellerId]
         end
+      else
+        @res1 = data[:AWSkey]
+        @res2 = data[:Skey]
+        @res3 = data[:SellerId]
       end
     else
       temp = Mws.find_by(User:current_email)
@@ -107,8 +116,12 @@ class ItemsController < ApplicationController
     input_type = body[4].to_i
     reg_asin = body[5]
     ng_asin = body[6]
-
+    logger.debug(reg_asin)
     user = current_user.email
+
+    if User.find_by(user: user).access_flg != true then
+      maxnum = 20
+    end
 
     if input_type == 1 then
       logger.debug("Case URL")
@@ -157,6 +170,9 @@ class ItemsController < ApplicationController
       j = 0
       data = []
       for j in 0..reg_asin.length - 1
+        if reg_asin[j][0] == nil then
+          break
+        end
         data[j] = []
         for x in 0..28
           data[j][x] = ""
@@ -185,27 +201,19 @@ class ItemsController < ApplicationController
       aws_access_key_id: saws,
       aws_secret_access_key: skey
     )
-
-    aaws = "AKIAJXEG3LEGXBVPYUAA"
-    akey = "jHAewcR7wGDmr6sEmHfQNYD6z4WCWfvJUACAMy7M"
-    aid = "mamegomari10e-22"
-
-    Amazon::Ecs.configure do |options|
-      options[:AWS_access_key_id] = aaws
-      options[:AWS_secret_key] = akey
-      options[:associate_tag] = aid
-    end
-
+    id_type = 'ASIN'
     asin = []
+    asin_s = []
     requests = []
     i = 0
     j = 0
     k = 0
+    m = 0
+    counter = 0
 
-    key = ""
     for ta in data
       asin[i] = ta[9]
-      key = key + ta[9] + ","
+      asin_s[j] = ta[9]
 
       prices = {
         ListingPrice: { Amount: 1000, CurrencyCode: "JPY", }
@@ -214,7 +222,7 @@ class ItemsController < ApplicationController
       request = {
         MarketplaceId: "A1VC38T7YXB528",
         IdType: "ASIN",
-        IdValue: ta[9],
+        IdValue: asin[i],
         PriceToEstimateFees: prices,
         Identifier: "req" + i.to_s,
         IsAmazonFulfilled: false
@@ -223,60 +231,70 @@ class ItemsController < ApplicationController
       requests[i] = request
 
       i += 1
-      logger.debug(i)
-      if i == 10 then
-        parser = client.get_lowest_offer_listings_for_asin(asin,{item_condition: 'Used'})
-        doc = Nokogiri::XML(parser.body)
-        doc.remove_namespaces!
+      j += 1
+      counter += 1
 
-        parser2 = client.get_my_fees_estimate(requests)
-        doc2 = Nokogiri::XML(parser2.body)
-        doc2.remove_namespaces!
+      if j == 5 || counter == data.length then
+        logger.debug(asin_s)
+        parser3 = client.get_matching_product_for_id(id_type, asin_s)
+        doc3 = Nokogiri::XML(parser3.body)
+        doc3.remove_namespaces!
 
-        key = key.slice(0,key.length-1)
-
-        try = 0
-        times = 5
-        begin
-          aws = Amazon::Ecs.item_lookup(key, {:response_group => 'Large,OfferFull',:country => 'jp'})
-        rescue
-          sleep(1)
-          try += 1
-          retry if try < times
-        end
-
-        tch = aws.items.each do |item|
-          title = ""
-          lowprice = 0
-          mpn = ""
-          title = item.get('ItemAttributes/Title')
-          lowprice = item.get('OfferSummary/LowestNewPrice/Amount')
-          image = item.get('MediumImage/URL')
-          if image == nil then
-            image = item.get('ImageSets/ImageSet/MediumImage/URL')
+        for tas in asin_s
+          temp = doc3.xpath("//GetMatchingProductForIdResult[@Id='" + tas + "']")[0]
+          title = temp.xpath('.//ItemAttributes/Title')
+          if title != nil then
+            title = title.text
+            logger.debug(title)
           end
 
-          if lowprice == nil then
-            lowprice = 0
+          image = temp.xpath('.//SmallImage/URL')
+          if image != nil then
+            image = image.text
+            image = image.gsub('SL75','SL150')
           end
-          mpn = item.get('ItemAttributes/MPN')
 
-          data[k][7] = '<a href="https://amazon.co.jp/dp/' + data[k][9] + '" target="_blank">' + 'https://amazon.co.jp/dp/' + data[k][7] + '</a>'
+          mpn =  temp.xpath('.//ItemAttributes/PartNumber')
+          if mpn != nil then
+            mpn = mpn.text
+          end
+
           if image != nil then
             data[k][2] = '<img src="' + image + '" width="80" height="60">'
           else
             data[k][2] = ""
           end
+          data[k][7] = '<a href="https://amazon.co.jp/dp/' + data[k][9] + '" target="_blank">' + 'https://amazon.co.jp/dp/' + data[k][7] + '</a>'
           data[k][8] = title
-          data[k][11] = lowprice
           data[k][12] = mpn
           k += 1
         end
+        asin_s = []
+        j = 0
+      end
+
+      if i == 10 || counter == data.length then
+
+        parser = client.get_lowest_offer_listings_for_asin(asin,{item_condition: 'Used'})
+        parser1 = client.get_lowest_offer_listings_for_asin(asin,{item_condition: 'New'})
+        parser2 = client.get_my_fees_estimate(requests)
+
+        doc = Nokogiri::XML(parser.body)
+        doc.remove_namespaces!
+
+        doc1 = Nokogiri::XML(parser1.body)
+        doc1.remove_namespaces!
+
+        doc2 = Nokogiri::XML(parser2.body)
+        doc2.remove_namespaces!
 
         for tas in asin
 
           temp = doc.xpath("//GetLowestOfferListingsForASINResult[@ASIN='" + tas + "']")[0]
           temp = temp.xpath(".//LandedPrice/Amount")[0]
+
+          temp1 = doc1.xpath("//GetLowestOfferListingsForASINResult[@ASIN='" + tas + "']")[0]
+          temp1 = temp1.xpath(".//LandedPrice/Amount")[0]
 
           fee = 0
           temp2 = doc2.xpath("//FeesEstimateResult")
@@ -296,94 +314,27 @@ class ItemsController < ApplicationController
           else
             lowest = 0
           end
-          data[j][10] = String(lowest.to_i)
-          data[j][13] = String(fee.to_i/10)
-          j += 1
+
+          if temp1 != nil then
+            lowprice = temp1.text
+          else
+            lowprice = 0
+          end
+
+          data[m][10] = String(lowest.to_i)
+          data[m][11] = String(lowprice.to_i)
+          data[m][13] = String(fee.to_i/10)
+          m += 1
         end
 
         asin = []
-        key = ""
         i = 0
       end
     end
 
-
-    if i > 0  then
-      logger.debug("key=" + key)
-      parser = client.get_lowest_offer_listings_for_asin(asin,{item_condition: 'Used'})
-      doc = Nokogiri::XML(parser.body)
-      doc.remove_namespaces!
-
-      parser2 = client.get_my_fees_estimate(requests)
-      doc2 = Nokogiri::XML(parser2.body)
-      doc2.remove_namespaces!
-
-      for tas in asin
-        temp = doc.xpath("//GetLowestOfferListingsForASINResult[@ASIN='" + tas + "']")[0]
-        temp = temp.xpath(".//LandedPrice/Amount")[0]
-        if temp != nil then
-          lowest = temp.text
-        else
-          lowest = 0
-        end
-
-        fee = 0
-        temp2 = doc2.xpath("//FeesEstimateResult")
-        for tt in temp2
-          casin = tt.xpath("FeesEstimateIdentifier/IdValue")[0].text
-          if casin == tas then
-            tfee = tt.xpath("FeesEstimate/FeeDetailList/FeeDetail/FeeAmount/Amount")[0]
-            if tfee != nil then
-              fee = tfee.text
-              break
-            end
-          end
-        end
-        data[j][13] = String(fee.to_i/10)
-        data[j][10] = String(lowest.to_i)
-        j += 1
-      end
-
-      try = 0
-      times = 5
-      begin
-        aws = Amazon::Ecs.item_lookup(key, {:response_group => 'Large,OfferFull',:country => 'jp'})
-      rescue
-        sleep(1)
-        try += 1
-        retry if try < times
-      end
-
-      tch = aws.items.each do |item|
-        title = ""
-        lowprice = 0
-        mpn = ""
-        title = item.get('ItemAttributes/Title')
-        image = item.get('MediumImage/URL')
-        if image == nil then
-          image = item.get('ImageSets/ImageSet/MediumImage/URL')
-        end
-        lowprice = item.get('OfferSummary/LowestNewPrice/Amount')
-
-        if lowprice == nil then
-          lowprice = 0
-        end
-        mpn = item.get('ItemAttributes/MPN')
-
-        data[k][7] = '<a href="https://amazon.co.jp/dp/' + data[k][9] + '" target="_blank">' + 'https://amazon.co.jp/dp/' + data[k][7] + '</a>'
-        if image != nil then
-          data[k][2] = '<img src="' + image + '" width="80" height="60">'
-        else
-          data[k][2] = ""
-        end
-        data[k][8] = title
-        data[k][11] = lowprice
-        data[k][12] = mpn
-        k += 1
-      end
-    end
     render json: data
   end
+
 
   def upload
     logger.debug("\n\n\n")
@@ -430,7 +381,7 @@ class ItemsController < ApplicationController
 
     logger.debug("Feed Content is \n\n")
     logger.debug(new_body)
-
+=begin
     feed_type = "_POST_FLAT_FILE_LISTINGS_DATA_"
     parser = client.submit_feed(new_body, feed_type)
     doc = Nokogiri::XML(parser.body)
@@ -459,7 +410,7 @@ class ItemsController < ApplicationController
     logger.debug("\n\n")
     #submissionId = doc.match(/FeedSubmissionId>([\s\S]*?)<\/Feed/)[1]
     #parser.parse # will return a Hash object
-
+=end
     res = ["test"]
     render json: res
   end
@@ -776,7 +727,7 @@ class ItemsController < ApplicationController
       res = params[:data]
       regasin = JSON.parse(res[:regasin])
       ngasin = JSON.parse(res[:ngasin])
-
+      logger.debug(regasin)
       list = Asin.where(user:cuser)
       if list != nil then
         for j in 0..regasin.length - 1
@@ -814,7 +765,7 @@ class ItemsController < ApplicationController
         end
       end
     end
-    render
+    render json: nil
   end
 
   def setup
