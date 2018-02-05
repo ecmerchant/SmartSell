@@ -116,7 +116,7 @@ class ItemsController < ApplicationController
     input_type = body[4].to_i
     reg_asin = body[5]
     ng_asin = body[6]
-
+    user = current_user.email
     if input_type == 1 then
       logger.debug("Case URL")
       j = 0
